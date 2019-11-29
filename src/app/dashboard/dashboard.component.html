@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" [routerLink]="['']">
+        Project Manager
+    </a>
+    <button class="navbar-toggler" type="button" 
+            data-toggle="collapse" data-target="#navbarSupportedContent" 
+            aria-controls="navbarSupportedContent" aria-expanded="false" 
+            aria-label="Toggle navigation"
+            (click)="toggleCollapsed()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" 
+         id="navbarSupportedContent"
+         [ngClass]="{'collapse': collapsed, 'navbar-collapse': true}">
+         <ul class="navbar-nav mx-auto">
+            <li class="nav-item col-lg-4">
+                <a class="nav-link" [routerLink]="['add-project']">
+                    Add Project
+                </a>
+            </li>
+            <li class="nav-item col-lg-4">
+                <a class="nav-link" [routerLink]="['add-task']">
+                    Add Task
+                </a>
+            </li>
+            <li class="nav-item col-lg-4">
+                <a class="nav-link" [routerLink]="['add-user']">
+                    Add User
+                </a>
+            </li>
+            <li class="nav-item col-lg-4">
+                <a class="nav-link" [routerLink]="['view-task']">
+                    View Task
+                </a>
+            </li>
+         </ul>
+    </div>
+</nav>
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 container-fluid">
+    <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,73 @@
+<div class="container">
+    <br>
+    <form #form="ngForm" (ngSubmit)="addUser(form)">
+        <div class="form-group row">
+            <label for="userFirstNameId" 
+                   class="col-12 col-sm-12 col-md-2 col-lg-2 col-form-label">
+                <b>First Name:</b>
+            </label>
+            <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+                <input type="text" class="form-control" id="userFirstNameId" 
+                       placeholder="Enter First Name" name="userFirstName"
+                       [(ngModel)] = "user.firstName"
+                       required #userFirstName = "ngModel"
+                       [class.field-error] = "form.submitted && userFirstName.invalid">
+                <div class="alert alert-danger"
+                     [hidden] = "!form.submitted || userFirstName.valid">
+                    Please provide First Name
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="userLastNameId" 
+                   class="col-12 col-sm-12 col-md-2 col-lg-2 col-form-label">
+                <b>Last Name:</b>
+            </label>
+            <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+                <input type="text" class="form-control" id="userLastNameId" 
+                       placeholder="Enter Last Name" name="userLastName"
+                       [(ngModel)] = "user.lastName"
+                       required #userLastName = "ngModel"
+                       [class.field-error] = "form.submitted && userLastName.invalid">
+                <div class="alert alert-danger"
+                     [hidden] = "!form.submitted || userLastName.valid">
+                    Please provide Last Name
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="userEmployeeId" class="col-12 col-sm-12 col-md-2 col-lg-2 col-form-label">
+                <b>Employee ID:</b>
+            </label>
+            <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+                <input type="text" class="form-control" id="userEmployeeId" 
+                       placeholder="Enter Employee ID" name="userEmployeeIdentifier"
+                       [(ngModel)] = "user.employeeId"
+                       required #employeeId = "ngModel"
+                       pattern="[0-9]+"
+                       [class.field-error] = "form.submitted && employeeId.invalid">
+                <div class="alert alert-danger"
+                     [hidden] = "!form.submitted || employeeId.valid">
+                     Employee Id is Blank or Incorrect
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="form-group row">
+            <button 
+                class="btn btn-primary ml-auto mr-2 col-5 col-sm-5 col-md-4 col-lg-3" 
+                type="submit">
+                Add
+            </button>
+            <button 
+                class="btn btn-danger mr-auto col-5 col-sm-5 col-md-4 col-lg-3" 
+                type="reset"
+                (click)="resetFields()">
+                Reset
+            </button>
+        </div>
+
+    </form>
+</div>
