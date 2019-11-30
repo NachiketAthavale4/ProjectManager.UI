@@ -29,6 +29,18 @@ export class ViewUserComponent implements OnInit {
     );
   }
 
+  sortByFirstName(){
+    this.searchList = this.searchList.sort((x,y) => x.firstName.localeCompare(y.firstName));
+  }
+
+  sortByLastName(){
+    this.searchList = this.searchList.sort((x,y) => x.lastName.localeCompare(y.lastName));
+  }
+
+  sortByEmployeeId(){
+    
+  }
+
   searchList : User[];
 
   userList : User[] = [

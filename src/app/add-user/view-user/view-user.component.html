@@ -26,9 +26,18 @@
             Sort:
         </div>
         <div class="col-10 col-sm-10 col-md-10 col-lg-5">
-            <button class="btn btn-secondary">First Name</button>
-            <button class="btn btn-secondary ml-2">Last Name</button>
-            <button class="btn btn-secondary ml-2">Employee ID</button>
+            <button class="btn btn-secondary"
+                    (click)="sortByFirstName()">
+                First Name
+            </button>
+            <button class="btn btn-secondary ml-2"
+                    (click)="sortByLastName()">
+                Last Name
+            </button>
+            <button class="btn btn-secondary ml-2"
+                    (click)="sortByEmployeeId()">
+                Employee ID
+            </button>
         </div>
     </div>
     <br>
@@ -90,5 +99,4 @@
             </div>
         </li>
     </ul>
-    
 </div>
