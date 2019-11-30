@@ -1,5 +1,26 @@
 <div class="container">
     <br>
+    <div class="row">
+        <div class="col-10 col-sm-10 col-md-10 col-lg-4">
+            <input type="text" placeholder="Search User"
+                   class="form-control">
+        </div>
+        <button type="button" 
+                class="btn btn-success btn-block col-2 col-sm-2 col-md-2 col-lg-1" style="height: 60%">
+            Search
+        </button>
+        <br>
+        <br class="rwd-break" />
+        <div class="col-2 col-sm-2 col-md-2 col-lg-1 ml-2">
+            Sort:
+        </div>
+        <div class="col-10 col-sm-10 col-md-10 col-lg-5">
+            <button class="btn btn-secondary">First Name</button>
+            <button class="btn btn-secondary ml-2">Last Name</button>
+            <button class="btn btn-secondary ml-2">Employee ID</button>
+        </div>
+    </div>
+    <br>
     <ul class="list-group">
         <li class="list-group-item" *ngFor="let user of userList">
             <div class="row">

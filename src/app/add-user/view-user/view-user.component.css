@@ -1,0 +1,9 @@
+.rwd-break {
+    display: block;
+}
+
+@media only screen and (min-width: 992px) {
+    [class*="rwd-break"] {
+        display: hide;
+    }
+}
