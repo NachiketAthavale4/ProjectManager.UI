@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-view-user',
@@ -8,10 +9,24 @@ import { User } from 'src/app/models/user';
 })
 export class ViewUserComponent implements OnInit {
 
+  queryField : FormControl = new FormControl();
   constructor() { }
 
   ngOnInit() {
     this.searchList = this.userList;
+    this.queryField.valueChanges.subscribe(
+      (result : string) => {
+        if(result != null){
+          console.log("Result: ",result);
+          if(result=="" || result==" "){
+            this.searchList = this.userList;
+          }
+          else{
+            this.searchText = result;
+          }
+        }
+      } 
+    );
   }
 
   searchList : User[];
@@ -92,9 +107,13 @@ export class ViewUserComponent implements OnInit {
 
   searchUser(){
     console.log(this.searchText);
+    if(this.searchText != null){
     this.searchList = 
-      this.userList.filter(x => x.firstName.toUpperCase() == this.searchText.toUpperCase()
-                                || x.lastName.toUpperCase() == this.searchText.toUpperCase());
+      this.userList.filter(x => x.firstName.toUpperCase().includes(this.searchText.toUpperCase())
+                                || x.lastName.toUpperCase().includes(this.searchText.toUpperCase())
+                                || (this.searchText.includes(" ") && x.firstName.toUpperCase().includes(this.searchText.toUpperCase())
+                                    && x.lastName.toUpperCase().includes(this.searchText.toUpperCase())));
+    }
   }
 
   onNotify(user : User) : void {
