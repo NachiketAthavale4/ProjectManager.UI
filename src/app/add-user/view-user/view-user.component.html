@@ -69,7 +69,15 @@
                 <div class="col-4 col-sm-4 col-md-4 col-lg-2 align-self-center">
                     <button class="btn btn-success btn-block" 
                             type="button"
-                            (click)="editUser(i)">
+                            (click)="editUser(i)"
+                            *ngIf="editUserIndex == null">
+                        Edit
+                    </button>
+                    <button class="btn btn-success btn-block" 
+                            type="button"
+                            (click)="editUser(i)"
+                            *ngIf="editUserIndex != null"
+                            disabled>
                         Edit
                     </button>
                     <button class="btn btn-danger btn-block" 

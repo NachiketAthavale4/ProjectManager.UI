@@ -32,6 +32,38 @@ export class ViewUserComponent implements OnInit {
       taskId : null,
       projectId : null,
       userId : null
+    },
+    {
+      employeeId : 666300,
+      firstName : "Sheev",
+      lastName : "Palpatine",
+      taskId : null,
+      projectId : null,
+      userId : null
+    },
+    {
+      employeeId : 666301,
+      firstName : "Anakin",
+      lastName : "Skywalker",
+      taskId : null,
+      projectId : null,
+      userId : null
+    },
+    {
+      employeeId : 666302,
+      firstName : "Master",
+      lastName : "Windu",
+      taskId : null,
+      projectId : null,
+      userId : null
+    },
+    {
+      employeeId : 666303,
+      firstName : "Qui-Gon",
+      lastName : "Jin",
+      taskId : null,
+      projectId : null,
+      userId : null
     }
   ];
 
@@ -41,12 +73,15 @@ export class ViewUserComponent implements OnInit {
   onUpdateActive : boolean = false;
   searchText : string = null;
 
+  editUserIndex : number = null;
+
   editUser(i : number){
     console.log(this.userList[i].employeeId);
     this.editEmployeeId = this.userList[i].employeeId;
     this.editUserFirstName = this.userList[i].firstName;
     this.editUserLastName = this.userList[i].lastName;
     this.onUpdateActive = true;
+    this.editUserIndex = i;
     console.log("Edit-User OnUpdate",this.onUpdateActive);
   }
 
@@ -62,13 +97,22 @@ export class ViewUserComponent implements OnInit {
                                 || x.lastName.toUpperCase() == this.searchText.toUpperCase());
   }
 
-  onNotify(successVal : boolean) : void {
-    if(successVal){
+  onNotify(user : User) : void {
+    if(user != null && user.employeeId != null){
       console.log("Notify Ran");
+      if(this.editUserIndex != null){
+        this.userList[this.editUserIndex].employeeId = user.employeeId;
+        this.userList[this.editUserIndex].firstName = user.firstName;
+        this.userList[this.editUserIndex].lastName = user.lastName;
+      }
       this.editEmployeeId = null;
       this.editUserFirstName = null;
       this.editUserLastName = null;
       this.onUpdateActive = false;
+      this.editUserIndex = null;
+    }
+    else{
+      this.editUserIndex = null;
     }
   }
 

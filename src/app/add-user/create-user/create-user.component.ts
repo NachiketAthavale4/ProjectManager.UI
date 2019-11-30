@@ -28,11 +28,7 @@ export class CreateUserComponent implements OnInit, OnChanges {
   @Input() editEmployeeId : number = 654;
   @Input() editFirstName : string;
   @Input() editLastName : string;
-  @Output() notify : EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  onClick(){
-    
-  }
+  @Output() notify : EventEmitter<User> = new EventEmitter<User>();
   
   user : User = {
     employeeId : null,
@@ -50,7 +46,7 @@ export class CreateUserComponent implements OnInit, OnChanges {
     this.user.firstName = null;
     this.user.lastName = null;
     this.updateIndicator = false;
-    this.notify.emit(true);
+    this.notify.emit(this.user);
   }
 
   addUser(form : NgForm){
@@ -65,12 +61,12 @@ export class CreateUserComponent implements OnInit, OnChanges {
     console.log(this.user.employeeId);
     console.log(this.user.firstName);
     console.log(this.user.lastName);
+    this.notify.emit(this.user);
     this.updateIndicator = false;
     this.user.firstName = null;
     this.user.lastName = null;
     this.user.employeeId = null;
     console.log("Create-User OnUpdate",this.updateIndicator);
-    this.notify.emit(true);
   }
 
 }
