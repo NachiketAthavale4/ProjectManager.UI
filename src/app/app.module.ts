@@ -14,6 +14,8 @@ import { RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CreateUserComponent } from './add-user/create-user/create-user.component';
 import { ViewUserComponent } from './add-user/view-user/view-user.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,9 @@ import { ViewUserComponent } from './add-user/view-user/view-user.component';
         ] 
       },
       { path: '**', component: PageNotFoundComponent }
-    ])
+    ]),
+    BsDatepickerModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

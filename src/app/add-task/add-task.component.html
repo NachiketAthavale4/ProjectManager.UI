@@ -1,1 +1,145 @@
-<p>add-task works!</p>
+<div class="container">
+    <br>
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="projectNameId">
+                <b>Project:</b>
+            </label>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+            <input type="text" class="form-control" 
+                   id="projectNameId" name="projectNameField"
+                   readonly>
+        </div>
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <button class="btn btn-success btn-block" type="button">
+                Select Project
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="newTaskId">
+                <b>Task:</b>
+            </label>
+        </div>
+        <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+            <input type="text" class="form-control" 
+                   id="newTaskId" name="newTaskField">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            
+        </div>
+            <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+                <div class="form-check-inline">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input">Parent Task
+                    </label>
+                </div>
+            </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="priorityTaskId">
+                <b>Priority:</b>
+            </label>
+        </div>
+        <div class="col-1 col-sm-1 col-md-1 col-lg-1">
+            0
+        </div>
+        <div class="col-10 col-sm-10 col-md-8 col-lg-8">
+            <input type="range" class="form-control-range" 
+                   id="priorityTaskId" name="priorityTaskField"
+                   min=0 max=30 step="1">
+        </div>
+        <div class="col-1 col-sm-1 col-md-1 col-lg-1">
+            30
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="parentTaskId">
+                <b>Parent Task:</b>
+            </label>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+            <input type="text" class="form-control" 
+                   id="parentTaskId" name="parentTaskField"
+                   readonly>
+        </div>
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <button class="btn btn-success btn-block" type="button">
+                Select Task
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-6 col-sm-6 col-md-2 col-lg-2 align-self-center">
+            <label for="taskStartDateId">
+                <b>Start Date:</b>
+            </label>
+        </div>
+        <div class="col-6 col-sm-6 col-md-4 col-lg-4">
+            <input  type="text"
+                placeholder="Enter Start Date"
+                class="form-control"
+                bsDatepicker
+                [bsConfig]="{ adaptivePosition: true }"
+                id="taskStartDateId"
+                name="taskStartDateField">
+        </div>
+        <div class="col-6 col-sm-6 col-md-2 col-lg-2 align-self-center">
+            <b>End Date:</b>
+        </div>
+        <div class="col-6 col-sm-6 col-md-4 col-lg-4">
+            <input  type="text"
+                placeholder="Enter End Date"
+                class="form-control"
+                bsDatepicker
+                [bsConfig]="{ adaptivePosition: true }"
+                id="taskEndDateId"
+                name="taskEndDateField">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="addUserId">
+                <b>User:</b>
+            </label>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+            <input type="text" class="form-control" 
+                   id="addUserId" name="addUserField"
+                   readonly>
+        </div>
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <button class="btn btn-success btn-block" type="button">
+                Add User
+            </button>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="form-group row">
+        <button 
+            class="btn btn-primary ml-auto mr-2 col-5 col-sm-5 col-md-4 col-lg-3" 
+            type="submit">
+            Add Task
+        </button>
+        <button 
+            class="btn btn-danger mr-auto col-5 col-sm-5 col-md-4 col-lg-3" 
+            type="reset">
+            Reset
+        </button>
+    </div>
+
+</div>
