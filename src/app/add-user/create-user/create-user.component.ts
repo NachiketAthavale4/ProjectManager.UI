@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ChangeDetectorRef, ApplicationRef, Output, EventEmitter } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { NgForm } from '@angular/forms';
 
@@ -7,13 +7,33 @@ import { NgForm } from '@angular/forms';
   templateUrl: './create-user.component.html',
   styleUrls: ['./create-user.component.css']
 })
-export class CreateUserComponent implements OnInit {
+export class CreateUserComponent implements OnInit, OnChanges {
+  
+  ngOnChanges(): void {
+    this.user.employeeId = this.editEmployeeId;
+    this.user.firstName = this.editFirstName;
+    this.user.lastName = this.editLastName;
+    this.updateIndicator = this.onUpdateActive;
+    console.log("ngOnChanges",this.onUpdateActive);
+  }
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  private _editEmployeeId;
+
+  @Input() onUpdateActive : boolean = false;
+  @Input() editEmployeeId : number = 654;
+  @Input() editFirstName : string;
+  @Input() editLastName : string;
+  @Output() notify : EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  onClick(){
+    
+  }
+  
   user : User = {
     employeeId : null,
     firstName : null,
@@ -23,8 +43,14 @@ export class CreateUserComponent implements OnInit {
     userId : null
   }
 
+  updateIndicator : boolean = false;
+
   resetFields(){
-    this.user = null;
+    this.user.employeeId = null;
+    this.user.firstName = null;
+    this.user.lastName = null;
+    this.updateIndicator = false;
+    this.notify.emit(true);
   }
 
   addUser(form : NgForm){
@@ -32,6 +58,19 @@ export class CreateUserComponent implements OnInit {
     console.log(this.user.employeeId);
     console.log(this.user.firstName);
     console.log(this.user.lastName);
+  }
+
+  onUpdateClicked(form : NgForm){
+    console.log("Form Submitted");
+    console.log(this.user.employeeId);
+    console.log(this.user.firstName);
+    console.log(this.user.lastName);
+    this.updateIndicator = false;
+    this.user.firstName = null;
+    this.user.lastName = null;
+    this.user.employeeId = null;
+    console.log("Create-User OnUpdate",this.updateIndicator);
+    this.notify.emit(true);
   }
 
 }

@@ -11,7 +11,10 @@ export class ViewUserComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.searchList = this.userList;
   }
+
+  searchList : User[];
 
   userList : User[] = [
     {
@@ -31,5 +34,42 @@ export class ViewUserComponent implements OnInit {
       userId : null
     }
   ];
+
+  editEmployeeId : number;
+  editUserFirstName : string;
+  editUserLastName : string;
+  onUpdateActive : boolean = false;
+  searchText : string = null;
+
+  editUser(i : number){
+    console.log(this.userList[i].employeeId);
+    this.editEmployeeId = this.userList[i].employeeId;
+    this.editUserFirstName = this.userList[i].firstName;
+    this.editUserLastName = this.userList[i].lastName;
+    this.onUpdateActive = true;
+    console.log("Edit-User OnUpdate",this.onUpdateActive);
+  }
+
+  deleteUser(i : number){
+    console.log(this.userList[i].employeeId);
+    this.searchList.splice(i,1);
+  }
+
+  searchUser(){
+    console.log(this.searchText);
+    this.searchList = 
+      this.userList.filter(x => x.firstName.toUpperCase() == this.searchText.toUpperCase()
+                                || x.lastName.toUpperCase() == this.searchText.toUpperCase());
+  }
+
+  onNotify(successVal : boolean) : void {
+    if(successVal){
+      console.log("Notify Ran");
+      this.editEmployeeId = null;
+      this.editUserFirstName = null;
+      this.editUserLastName = null;
+      this.onUpdateActive = false;
+    }
+  }
 
 }

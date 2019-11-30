@@ -1,12 +1,22 @@
 <div class="container">
+    <app-create-user 
+        [editEmployeeId]="editEmployeeId"
+        [editFirstName]="editUserFirstName"
+        [editLastName]="editUserLastName"
+        [onUpdateActive]="onUpdateActive"
+        (notify) = "onNotify($event)" >
+    </app-create-user>
+    <hr>
     <br>
     <div class="row">
         <div class="col-10 col-sm-10 col-md-10 col-lg-4">
             <input type="text" placeholder="Search User"
-                   class="form-control">
+                   class="form-control" [(ngModel)]="searchText">
         </div>
         <button type="button" 
-                class="btn btn-success btn-block col-2 col-sm-2 col-md-2 col-lg-1" style="height: 60%">
+                class="btn btn-success btn-block col-2 col-sm-2 col-md-2 col-lg-1" 
+                style="height: 60%"
+                (click)="searchUser()">
             Search
         </button>
         <br>
@@ -22,7 +32,7 @@
     </div>
     <br>
     <ul class="list-group">
-        <li class="list-group-item" *ngFor="let user of userList">
+        <li class="list-group-item" *ngFor="let user of searchList;index as i">
             <div class="row">
                 <div class="col-8 col-sm-8 col-md-8 col-lg-10">
                     <div class="form-group row">
@@ -57,10 +67,14 @@
                     </div>
                 </div>
                 <div class="col-4 col-sm-4 col-md-4 col-lg-2 align-self-center">
-                    <button class="btn btn-success btn-block" type="button">
+                    <button class="btn btn-success btn-block" 
+                            type="button"
+                            (click)="editUser(i)">
                         Edit
                     </button>
-                    <button class="btn btn-danger btn-block" type="button">
+                    <button class="btn btn-danger btn-block" 
+                            type="button"
+                            (click)="deleteUser(i)">
                         Delete
                     </button>
                 </div>
