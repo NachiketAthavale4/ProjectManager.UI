@@ -16,6 +16,8 @@ import { CreateUserComponent } from './add-user/create-user/create-user.componen
 import { ViewUserComponent } from './add-user/view-user/view-user.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CreateProjectComponent } from './add-project/create-project/create-project.component';
+import { ViewProjectComponent } from './add-project/view-project/view-project.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ViewTaskComponent,
     PageNotFoundComponent,
     CreateUserComponent,
-    ViewUserComponent
+    ViewUserComponent,
+    CreateProjectComponent,
+    ViewProjectComponent
   ],
   imports: [
     BrowserModule,
