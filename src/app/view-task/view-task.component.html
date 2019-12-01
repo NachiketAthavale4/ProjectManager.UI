@@ -1,1 +1,76 @@
-<p>view-task works!</p>
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-3 col-sm-3 col-md-1 col-lg-1 mt-1">
+            <label class="form-control-label" for="projectNameId">
+                <b>Project:</b>
+            </label>
+        </div>
+        <div class="col-9 col-sm-9 col-md-4 col-lg-4">
+            <input class="form-control" id="projectNameId" 
+                   name="projectNameField">
+        </div>
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <button type="button" class="btn btn-success btn-block">
+                Search
+            </button>
+        </div>
+        <div class="col-12 col-sm-12 col-md-1 col-lg-1 align-self-center">
+            <b>Sort:</b>
+        </div>
+        <div class="col-6 col-sm-6 col-md-2 col-lg-2">
+            <button type="button" class="btn btn-secondary btn-block btn-sm">
+                Start Date
+            </button>
+            <button type="button" class="btn btn-secondary btn-block btn-sm">
+                End Date
+            </button>
+        </div>
+        <div class="col-6 col-sm-6 col-md-2 col-lg-2">
+            <button type="button" class="btn btn-secondary btn-block btn-sm">
+                Priority
+            </button>
+            <button type="button" class="btn btn-secondary btn-block btn-sm">
+                Completed
+            </button>
+        </div>
+    </div>
+    <hr>
+    <br>
+    <ul class="list-group">
+        <li class="list-group-item" *ngFor="let task of taskList">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+                    <h6>Task</h6>
+                    {{ task.taskName }}
+                </div>
+                <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+                    <h6>Parent Task</h6>
+                    {{ task.parentTaskName }}
+                </div>
+                <div class="col-4 col-sm-4 col-md-1 col-lg-1">
+                    <h6>Priority</h6>
+                    {{ task.priority }}
+                </div>
+                <div class="col-4 col-sm-4 col-md-2 col-lg-2">
+                    <h6>Start Date</h6>
+                    {{ task.startDate | date}}
+                </div>
+                <div class="col-4 col-sm-4 col-md-2 col-lg-2">
+                    <h6>End Date</h6>
+                    {{ task.startDate | date}}
+                </div>
+                <div class="col-lg-1 align-self-end">
+                    <button class="btn btn-success" type="button">
+                        Edit
+                    </button>
+                </div>
+                <div class="col-lg-2 align-self-end">
+                    <button class="btn btn-danger" type="button">
+                        End Task
+                    </button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
