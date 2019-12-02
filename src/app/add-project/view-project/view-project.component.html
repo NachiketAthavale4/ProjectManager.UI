@@ -5,7 +5,8 @@
         [editStartDate]="updateProjectStartDate"
         [editEndDate]="updateProjectEndDate"
         [editManagedBy]="updateProjectManager"
-        [onUpdateActive]="onUpdateActive">
+        [onUpdateActive]="onUpdateActive"
+        (notify) = "onNotify($event)">
 
     </app-create-project>
     <hr>

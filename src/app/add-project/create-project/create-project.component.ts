@@ -39,16 +39,8 @@ export class CreateProjectComponent implements OnInit, OnChanges{
   updateIndicator : boolean = false;
 
   resetFields(){
-    this.projectData.projectId = null;
-    this.projectData.projectName = null;
-    this.projectData.startDate = null;
-    this.projectData.endDate = null;
-    this.projectData.status = null;
-    this.projectData.priorty = null;
-    this.projectData.managedBy = null;
-    this.projectData.numOfTasks = null;
     this.updateIndicator = false;
-    //this.notify.emit(this.project);
+    this.notify.emit(this.projectData);
   }
 
   projectData : Project = {
@@ -144,14 +136,14 @@ export class CreateProjectComponent implements OnInit, OnChanges{
 
   toggleProjectDateEnabled(){
     this.projectDateEnabled = !this.projectDateEnabled;
-    this.editStartDate = new Date(Date.now());
-    this.editEndDate = new Date();
-    this.editEndDate.setDate(this.editStartDate.getDate() + 1);
+    this.projectData.startDate = new Date(Date.now());
+    this.projectData.endDate = new Date();
+    this.projectData.endDate.setDate(this.projectData.startDate.getDate() + 1);
   }
 
   dateValidCheck(){
     console.log("DateValid fired");
-    if(this.projectDateEnabled && this.editStartDate < this.editEndDate){
+    if(this.projectDateEnabled && this.projectData.startDate < this.projectData.endDate){
       console.log(true);
       return true;
     }
@@ -175,7 +167,7 @@ export class CreateProjectComponent implements OnInit, OnChanges{
     console.log(this.projectData.projectName);
     console.log(this.projectData.startDate);
     console.log(this.projectData.endDate);
-    //this.notify.emit(this.user);
+    this.notify.emit(this.projectData);
     this.updateIndicator = false;
     this.projectData.projectId = null;
     this.projectData.projectName = null;
@@ -185,15 +177,6 @@ export class CreateProjectComponent implements OnInit, OnChanges{
     this.projectData.priorty = null;
     this.projectData.managedBy = null;
     this.projectData.numOfTasks = null;
-
-    this.ediProjectId = null;
-    this.editProjectName = null;
-    this.editStartDate = null;
-    this.editEndDate = null;
-    this.editStatus = null;
-    this.editPriorty = 0;
-    this.editManagedBy = null;
-    this.editNumOfTasks = null;
 
     console.log("Create-Project OnUpdate",this.updateIndicator);
   }

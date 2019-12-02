@@ -89,4 +89,29 @@ export class ViewProjectComponent implements OnInit {
 
   updateActiveIndicator : boolean = false;
 
+  onNotify(project : Project) : void {
+    if(project != null && project.projectName != null){
+      console.log("Notify Ran");
+      if(this.updateProjectIndex != null){
+        this.projectList[this.updateProjectIndex].projectName = project.projectName;
+        this.projectList[this.updateProjectIndex].priorty = project.priorty;
+        this.projectList[this.updateProjectIndex].startDate = project.startDate;
+        this.projectList[this.updateProjectIndex].endDate = project.endDate;
+        this.projectList[this.updateProjectIndex].managedBy = project.managedBy;
+      }
+      this.updateProjectName = null;
+      this.updateProjectPriority = null;
+      this.updateProjectStartDate = null;
+      this.updateProjectEndDate = null;
+      this.updateProjectManager = null;
+      this.onUpdateActive = false;
+      this.updateProjectIndex = null;
+    }
+    else{
+      console.log("Reset Fired");
+      this.updateProjectIndex = null;
+      this.onUpdateActive = false;
+    }
+  }
+
 }
