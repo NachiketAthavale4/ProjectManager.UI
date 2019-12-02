@@ -1,5 +1,6 @@
 <div class="container">
     <br>
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
     <div class="row">
         <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
             <label for="projectNameId" class="form-control-label">
@@ -8,7 +9,14 @@
         </div>
         <div class="col-12 col-sm-12 col-md-9 col-lg-9">
             <input type="text" class="form-control"
-                   id="projectNameId" name="projectNameField">
+                   id="projectNameId" name="projectNameField"
+                   [(ngModel)] = "projectName"
+                   required #nameField = "ngModel"
+                   [class.field-error] = "form.submitted && nameField.invalid">
+            <div [hidden] = "!form.submitted || nameField.valid"
+                 class="alert alert-danger">
+                Provide Project Title
+            </div>
         </div>
     </div>
 
@@ -21,29 +29,58 @@
         <div class="col-12 col-sm-12 col-md-3 col-lg-3 align-self-center">
             <div class="form-check-inline">
                 <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input">
+                    <input type="checkbox" class="form-check-input"
+                           (click)="toggleProjectDateEnabled()">
                     Set Start and End Date
                 </label>
             </div>
         </div>
         <div class="col-6 col-sm-6 col-md-3 col-lg-3">
-                <input  type="text"
+                <input type="text"
+                       placeholder="Enter Start Date"
+                       class="form-control"
+                       *ngIf="!projectDateEnabled"
+                       readonly>
+                <input type="text"
                     placeholder="Enter Start Date"
                     class="form-control"
                     bsDatepicker
                     [bsConfig]="{ adaptivePosition: true }"
                     id="projectStartDateId"
-                    name="projectStartDateField">
+                    name="projectStartDateField"
+                    *ngIf="projectDateEnabled"
+                    [(ngModel)]="startDateOnEnabled">
         </div>
 
         <div class="col-6 col-sm-6 col-md-3 col-lg-3">
-                <input  type="text"
+                <input type="text"
+                    placeholder="Enter End Date"
+                    class="form-control"
+                    *ngIf="!projectDateEnabled"
+                    readonly>
+                <input type="text"
                     placeholder="Enter End Date"
                     class="form-control"
                     bsDatepicker
                     [bsConfig]="{ adaptivePosition: true }"
                     id="projectEndDateId"
-                    name="projectEndDateField">
+                    name="projectEndDateField"
+                    *ngIf="projectDateEnabled"
+                    [(ngModel)] = "endDateOnEnabled"
+                    [class.field-error]="form.submitted && projectDateEnabled && !dateValid"
+                    >
+                
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            
+        </div>
+        <div class="col-12 col-sm-12 col-md-3 col-lg-3 align-self-center">
+        </div>
+
+        <div [hidden] = "!form.submitted || !projectDateEnabled || (projectDateEnabled && dateValid)"
+             class="alert alert-danger col-12 col-sm-12 col-md-6 col-lg-6">
+            End Date Smaller Than Start Date
         </div>
     </div>
 
@@ -56,12 +93,12 @@
                 </label>
         </div>
         <div class="col-1 col-sm-1 col-md-1 col-lg-1">
-                0
+            0
         </div>
         <div class="col-10 col-sm-10 col-md-8 col-lg-7">
-                <input type="range" class="form-control-range" 
-                       id="priorityProjectId" name="priorityProjectField"
-                       min=0 max=30 step="1" value="0">
+            <input type="range" class="form-control-range" 
+                   id="priorityProjectId" name="priorityProjectField"
+                   min=0 max=30 step="1" value="0">
         </div>
         <div class="col-1 col-sm-1 col-md-1 col-lg-1">
             30
@@ -77,11 +114,13 @@
         <div class="col-12 col-sm-12 col-md-8 col-lg-7">
             <input type="text" class="form-control" 
                    id="addUserId" name="addUserField"
+                   [(ngModel)] = "managedBy"
                    readonly>
         </div>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
-            <button class="btn btn-success btn-block" type="button">
-                Search
+            <button class="btn btn-success btn-block" type="button"
+            (click)="openModal(template)">
+                Add Manager
             </button>
         </div>
     </div>
@@ -101,4 +140,59 @@
             </button>
     </div>
 
+</form>
+
 </div>
+
+<ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Add Manager</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                <input type="text" class="form-control" id="searchUserFieldId" 
+                       placeholder="Search User"
+                       [formControl]="queryField">
+            </div>
+            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                <button class="btn btn-success" type="button"
+                        (click)="searchUser()">
+                    Search
+                </button>
+            </div>
+        </div>
+        <br>
+
+
+        <ul class="list-group listoverflow">
+            <li class="list-group-item list-group-item-action" *ngFor="let user of searchList;index as i">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <b>Name: </b> {{ user.firstName }} {{ user.lastName }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <b>Employee ID: </b> {{ user.employeeId }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <button type="button" class="btn btn-primary"
+                                (click)="addManager(i);modalRef.hide()">
+                            Select
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" 
+              aria-label="Close" (click)="modalRef.hide()">
+          Close
+      </button>
+    </div>
+  </ng-template>
