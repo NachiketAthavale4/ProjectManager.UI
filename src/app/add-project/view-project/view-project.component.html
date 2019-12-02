@@ -1,5 +1,13 @@
 <div class="container">
-    <app-create-project></app-create-project>
+    <app-create-project
+        [editProjectName]="updateProjectName"
+        [editPriorty]="updateProjectPriority"
+        [editStartDate]="updateProjectStartDate"
+        [editEndDate]="updateProjectEndDate"
+        [editManagedBy]="updateProjectManager"
+        [onUpdateActive]="onUpdateActive">
+
+    </app-create-project>
     <hr>
     <br>
     <div class="row">
@@ -92,7 +100,16 @@
                 </div>
                 <div class="col-4 col-sm-4 col-md-2 col-lg-2 align-self-center">
                     <button class="btn btn-success btn-block" 
-                            type="button">
+                            type="button"
+                            (click)="editProject(i)"
+                            *ngIf="updateProjectIndex == null">
+                        Update
+                    </button>
+                    <button class="btn btn-success btn-block" 
+                            type="button"
+                            (click)="editProject(i)"
+                            *ngIf="updateProjectIndex != null"
+                            disabled>
                         Update
                     </button>
                     <button class="btn btn-danger btn-block" 

@@ -10,13 +10,13 @@
         <div class="col-12 col-sm-12 col-md-9 col-lg-9">
             <input type="text" class="form-control"
                    id="projectNameId" name="projectNameField"
-                   [(ngModel)] = "projectName"
+                   [(ngModel)] = "editProjectName"
                    required #nameField = "ngModel"
                    [class.field-error] = "form.submitted && nameField.invalid">
-            <div [hidden] = "!form.submitted || nameField.valid"
-                 class="alert alert-danger">
-                Provide Project Title
-            </div>
+                   <div class="alert alert-danger"
+                   [hidden] = "!form.submitted || nameField.valid">
+                  Please provide Project Title
+              </div>
         </div>
     </div>
 
@@ -27,10 +27,17 @@
             
         </div>
         <div class="col-12 col-sm-12 col-md-3 col-lg-3 align-self-center">
-            <div class="form-check-inline">
+            <div class="form-check-inline" *ngIf="!updateIndicator">
                 <label class="form-check-label">
                     <input type="checkbox" class="form-check-input"
                            (click)="toggleProjectDateEnabled()">
+                    Set Start and End Date
+                </label>
+            </div>
+            <div class="form-check-inline" *ngIf="updateIndicator">
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input"
+                           (click)="toggleProjectDateEnabled()" checked="checked">
                     Set Start and End Date
                 </label>
             </div>
@@ -39,7 +46,7 @@
                 <input type="text"
                        placeholder="Enter Start Date"
                        class="form-control"
-                       *ngIf="!projectDateEnabled"
+                       *ngIf="!projectDateEnabled && !updateIndicator"
                        readonly>
                 <input type="text"
                     placeholder="Enter Start Date"
@@ -48,15 +55,24 @@
                     [bsConfig]="{ adaptivePosition: true }"
                     id="projectStartDateId"
                     name="projectStartDateField"
-                    *ngIf="projectDateEnabled"
-                    [(ngModel)]="startDateOnEnabled">
+                    *ngIf="projectDateEnabled && !updateIndicator"
+                    [(ngModel)]="editStartDate">
+                <input type="text"
+                    placeholder="Enter Start Date"
+                    class="form-control"
+                    bsDatepicker
+                    [bsConfig]="{ adaptivePosition: true }"
+                    id="updateProjectStartDateId"
+                    name="updateProjectStartDateField"
+                    *ngIf="updateIndicator"
+                    [(ngModel)]="editStartDate">
         </div>
 
         <div class="col-6 col-sm-6 col-md-3 col-lg-3">
                 <input type="text"
                     placeholder="Enter End Date"
                     class="form-control"
-                    *ngIf="!projectDateEnabled"
+                    *ngIf="!projectDateEnabled && !updateIndicator"
                     readonly>
                 <input type="text"
                     placeholder="Enter End Date"
@@ -65,8 +81,19 @@
                     [bsConfig]="{ adaptivePosition: true }"
                     id="projectEndDateId"
                     name="projectEndDateField"
-                    *ngIf="projectDateEnabled"
-                    [(ngModel)] = "endDateOnEnabled"
+                    *ngIf="projectDateEnabled && !updateIndicator"
+                    [(ngModel)] = "editEndDate"
+                    [class.field-error]="form.submitted && projectDateEnabled && !dateValid"
+                    >
+                <input type="text"
+                    placeholder="Enter End Date"
+                    class="form-control"
+                    bsDatepicker
+                    [bsConfig]="{ adaptivePosition: true }"
+                    id="updateProjectEndDateId"
+                    name="updateProjectEndDateField"
+                    *ngIf="updateIndicator"
+                    [(ngModel)] = "editEndDate"
                     [class.field-error]="form.submitted && projectDateEnabled && !dateValid"
                     >
                 
@@ -98,7 +125,8 @@
         <div class="col-10 col-sm-10 col-md-8 col-lg-7">
             <input type="range" class="form-control-range" 
                    id="priorityProjectId" name="priorityProjectField"
-                   min=0 max=30 step="1" value="0">
+                   [(ngModel)] = "editPriorty"
+                   min=0 max=30 step="1" value=0>
         </div>
         <div class="col-1 col-sm-1 col-md-1 col-lg-1">
             30
@@ -114,7 +142,7 @@
         <div class="col-12 col-sm-12 col-md-8 col-lg-7">
             <input type="text" class="form-control" 
                    id="addUserId" name="addUserField"
-                   [(ngModel)] = "managedBy"
+                   [(ngModel)] = "editManagedBy"
                    readonly>
         </div>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
@@ -130,8 +158,16 @@
     <div class="form-group row">
             <button 
                 class="btn btn-primary ml-auto mr-2 col-5 col-sm-5 col-md-4 col-lg-3" 
-                type="submit">
+                type="submit"
+                *ngIf="!updateIndicator">
                 Add Project
+            </button>
+            <button 
+                class="btn btn-primary ml-auto mr-2 col-5 col-sm-5 col-md-4 col-lg-3" 
+                type="submit"
+                *ngIf="updateIndicator"
+                (click)="updateProject()">
+                Update Project
             </button>
             <button 
                 class="btn btn-danger mr-auto col-5 col-sm-5 col-md-4 col-lg-3" 

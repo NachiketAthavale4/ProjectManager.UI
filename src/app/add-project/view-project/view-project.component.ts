@@ -33,6 +33,25 @@ export class ViewProjectComponent implements OnInit {
   searchText : string;
   searchList : Project[];
 
+  updateProjectName : string;
+  updateProjectPriority : number;
+  updateProjectStartDate : Date;
+  updateProjectEndDate : Date;
+  updateProjectManager : string;
+  onUpdateActive : boolean = false;
+  updateProjectIndex : number = null;
+
+  editProject(i : number){
+    console.log(this.searchList[i].projectName);
+    this.updateProjectName = this.searchList[i].projectName;
+    this.updateProjectPriority = this.searchList[i].priorty;
+    this.updateProjectStartDate = this.searchList[i].startDate;
+    this.updateProjectEndDate = this.searchList[i].endDate;
+    this.updateProjectManager = this.searchList[i].managedBy;
+    this.onUpdateActive = true;
+    this.updateProjectIndex = i;
+    console.log("Edit-Project OnUpdate",this.onUpdateActive);
+  }
 
   projectList : Project[] = [
     {
@@ -67,5 +86,7 @@ export class ViewProjectComponent implements OnInit {
         this.projectList.filter(x => x.projectName.toUpperCase().includes(this.searchText.toUpperCase()));
       }
   }
+
+  updateActiveIndicator : boolean = false;
 
 }

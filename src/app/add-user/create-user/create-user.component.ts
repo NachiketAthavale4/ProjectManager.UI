@@ -22,8 +22,6 @@ export class CreateUserComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
-  private _editEmployeeId;
-
   @Input() onUpdateActive : boolean = false;
   @Input() editEmployeeId : number = 654;
   @Input() editFirstName : string;
