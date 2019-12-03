@@ -13,6 +13,7 @@ import { Project } from 'src/app/models/project';
 export class CreateProjectComponent implements OnInit, OnChanges{
 
   ngOnChanges(): void {
+    
     this.projectData.projectName = this.editProjectName;
     this.projectData.startDate = this.editStartDate;
     this.projectData.endDate = this.editEndDate;
@@ -21,6 +22,7 @@ export class CreateProjectComponent implements OnInit, OnChanges{
 
     this.updateIndicator = this.onUpdateActive;
     console.log("ngOnChanges",this.onUpdateActive);
+    console.log(this.editEndDate);
   }
 
   @Input() onUpdateActive : boolean = false;

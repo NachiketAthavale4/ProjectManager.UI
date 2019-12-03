@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container col-12 col-sm-12 col-md-12 col-lg-12">
     <br>
     <div class="row">
         <div class="col-3 col-sm-3 col-md-1 col-lg-1 mt-1">
@@ -11,7 +11,8 @@
                    name="projectNameField">
         </div>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
-            <button type="button" class="btn btn-success btn-block">
+            <button type="button" class="btn btn-success btn-block"
+                    (click)="openModal(template)">
                 Search
             </button>
         </div>
@@ -60,12 +61,12 @@
                     <h6>End Date</h6>
                     {{ task.startDate | date}}
                 </div>
-                <div class="col-lg-1 align-self-end">
+                <div class=" col-12 col-sm-12 col-md-1 col-lg-1 align-self-end">
                     <button class="btn btn-success" type="button">
                         Edit
                     </button>
                 </div>
-                <div class="col-lg-2 align-self-end">
+                <div class=" col-12 col-sm-12 col-md-2 col-lg-2 align-self-end">
                     <button class="btn btn-danger" type="button">
                         End Task
                     </button>
@@ -74,3 +75,56 @@
         </li>
     </ul>
 </div>
+
+<ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Add Manager</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                <input type="text" class="form-control" id="searchUserFieldId" 
+                       placeholder="Search Project"
+                       [formControl]="queryField">
+            </div>
+            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                <button class="btn btn-success" type="button"
+                        (click)="searchProject()">
+                    Search
+                </button>
+            </div>
+        </div>
+        <br>
+
+
+        <ul class="list-group listoverflow">
+            <li class="list-group-item list-group-item-action" *ngFor="let project of searchList;index as i">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <b>Project Title: </b> {{ project.projectName }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <b>Manager: </b> {{ project.managedBy }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <button type="button" class="btn btn-primary"
+                                (click)="modalRef.hide()">
+                            Select
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" 
+              aria-label="Close" (click)="modalRef.hide()">
+          Close
+      </button>
+    </div>
+  </ng-template>
