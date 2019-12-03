@@ -3,6 +3,8 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { User } from '../models/user';
 import { FormControl } from '@angular/forms';
 import { Project } from '../models/project';
+import { Task } from '../models/task';
+import { ParentTask } from '../models/parent-task';
 
 @Component({
   selector: 'app-add-task',
@@ -13,12 +15,17 @@ export class AddTaskComponent implements OnInit {
 
   queryField : FormControl = new FormControl();
   queryProjectField : FormControl = new FormControl();
+  queryTaskField : FormControl = new FormControl();
 
   constructor(private modalService: BsModalService) { }
 
   ngOnInit() {
+    this.taskStartDate = new Date(Date.now());
+    this.taskEndDate = new Date();
+    this.taskEndDate.setDate(this.taskStartDate.getDate() + 1);
     this.searchUserList = this.userList;
     this.searchProjectList = this.projectList;
+    this.searchTaskList = this.taskList;
     this.queryField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
@@ -45,6 +52,19 @@ export class AddTaskComponent implements OnInit {
         }
       } 
     );
+    this.queryTaskField.valueChanges.subscribe(
+      (result : string) => {
+        if(result != null){
+          console.log("Result: ",result);
+          if(result=="" || result==" "){
+            this.searchTaskList = this.taskList;
+          }
+          else{
+            this.searchTaskText = result;
+          }
+        }
+      } 
+    );
   }
 
   searchUser(){
@@ -59,9 +79,16 @@ export class AddTaskComponent implements OnInit {
     this.taskUser = this.searchUserList[i].firstName + " " + this.searchUserList[i].lastName;
   }
 
+  searchTask(){
+    if(this.searchTaskText != null){
+      this.searchTaskList = this.searchTaskList.filter(
+        x => x.parentTaskName.toUpperCase().includes(this.searchTaskText.toUpperCase()));
+    }
+  }
+
   modalRef: BsModalRef;
 
-  
+  parentTaskName : string;
   searchUserText : string;
   searchUserList : User[];
   taskUser : string;
@@ -132,6 +159,13 @@ export class AddTaskComponent implements OnInit {
     this.modalRef = this.modalService.show(template);
   }
 
+  openTemplateModal(template: TemplateRef<any>){
+    this.searchTaskList = this.taskList;
+    this.searchTaskText = null;
+    this.queryTaskField.setValue(null);
+    this.modalRef = this.modalService.show(template);
+  }
+
   selectProject(i: number){
     this.projectName = this.searchProjectList[i].projectName;
   }
@@ -144,6 +178,14 @@ export class AddTaskComponent implements OnInit {
       }
   }
 
+  selectTask(i : number){
+    console.log(i);
+    this.parentTaskName = this.searchTaskList[i].parentTaskName;
+  }
+
+  taskStartDate : Date;
+  taskEndDate : Date;
+  isTaskParent: boolean = false;
   searchProjectText : string;
   searchProjectList : Project[];
 
@@ -170,6 +212,21 @@ export class AddTaskComponent implements OnInit {
     }
   ];
 
-  
+  searchTaskText : string;
+  searchTaskList : ParentTask[];
+  taskList : ParentTask[] = [
+    {
+      parentTaskId : 1,
+      parentTaskName : "Execute Order 66"
+    },
+    {
+      parentTaskId : 2,
+      parentTaskName : "Execute Order 67"
+    },
+    {
+      parentTaskId : 2,
+      parentTaskName : "Execute Order 68"
+    }
+  ];
 
 }

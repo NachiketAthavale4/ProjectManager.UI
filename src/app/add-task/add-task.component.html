@@ -40,7 +40,8 @@
             <div class="col-12 col-sm-12 col-md-10 col-lg-10">
                 <div class="form-check-inline">
                     <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input">Parent Task
+                        <input type="checkbox" class="form-check-input"
+                               [(ngModel)]="isTaskParent">Parent Task
                     </label>
                 </div>
             </div>
@@ -56,9 +57,14 @@
             0
         </div>
         <div class="col-10 col-sm-10 col-md-8 col-lg-8">
-            <input type="range" class="form-control-range" 
+            <input type="range" class="custom-range" 
                    id="priorityTaskId" name="priorityTaskField"
-                   min=0 max=30 step="1" value="0">
+                   min=0 max=30 step="1" value="0"
+                   *ngIf="!isTaskParent">
+            <input type="range" class="custom-range" 
+                   id="priorityTaskId" name="priorityTaskField"
+                   min=0 max=30 step="1" value="0"
+                   *ngIf="isTaskParent" disabled>
         </div>
         <div class="col-1 col-sm-1 col-md-1 col-lg-1">
             30
@@ -74,10 +80,16 @@
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
             <input type="text" class="form-control" 
                    id="parentTaskId" name="parentTaskField"
-                   readonly>
+                   readonly [(ngModel)]="parentTaskName">
         </div>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
-            <button class="btn btn-success btn-block" type="button">
+            <button class="btn btn-success btn-block" type="button"
+                    (click)="openTemplateModal(parentTaskTemplate)"
+                    *ngIf="!isTaskParent">
+                Select Task
+            </button>
+            <button class="btn btn-success btn-block" type="button" *ngIf="isTaskParent"
+                    disabled>
                 Select Task
             </button>
         </div>
@@ -96,7 +108,14 @@
                 bsDatepicker
                 [bsConfig]="{ adaptivePosition: true }"
                 id="taskStartDateId"
-                name="taskStartDateField">
+                name="taskStartDateField" *ngIf="!isTaskParent"
+                [(ngModel)]="taskStartDate">
+            <input  type="text"
+                placeholder="Enter End Date"
+                class="form-control"
+                bsDatepicker
+                [bsConfig]="{ adaptivePosition: true }"
+                *ngIf="isTaskParent" disabled>
         </div>
         <div class="col-6 col-sm-6 col-md-2 col-lg-2 align-self-center">
             <b>End Date:</b>
@@ -108,7 +127,14 @@
                 bsDatepicker
                 [bsConfig]="{ adaptivePosition: true }"
                 id="taskEndDateId"
-                name="taskEndDateField">
+                name="taskEndDateField" *ngIf="!isTaskParent"
+                [(ngModel)]="taskEndDate">
+            <input  type="text"
+                placeholder="Enter End Date"
+                class="form-control"
+                bsDatepicker
+                [bsConfig]="{ adaptivePosition: true }"
+                *ngIf="isTaskParent" disabled>
         </div>
     </div>
 
@@ -126,7 +152,11 @@
         </div>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
             <button class="btn btn-success btn-block" type="button"
-                    (click)="openModal(template)">
+                    (click)="openModal(template)" *ngIf="!isTaskParent">
+                Add User
+            </button>
+            <button class="btn btn-success btn-block" type="button"
+                    (click)="openModal(template)" *ngIf="isTaskParent" disabled>
                 Add User
             </button>
         </div>
@@ -244,6 +274,57 @@
                     <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                         <button type="button" class="btn btn-primary"
                                 (click)="selectProject(i);modalRef.hide()">
+                            Select
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" 
+              aria-label="Close" (click)="modalRef.hide()">
+          Close
+      </button>
+    </div>
+  </ng-template>
+
+
+  <ng-template #parentTaskTemplate>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Add ParentTask</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                <input type="text" class="form-control" id="searchUserFieldId" 
+                       placeholder="Search Parent Task"
+                       [formControl]="queryTaskField">
+            </div>
+            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                <button class="btn btn-success" type="button"
+                        (click)="searchTask()">
+                    Search
+                </button>
+            </div>
+        </div>
+        <br>
+
+
+        <ul class="list-group listoverflow">
+            <li class="list-group-item list-group-item-action" *ngFor="let task of searchTaskList;index as i">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                        <b>Task Name: </b> {{ task.parentTaskName }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <button type="button" class="btn btn-primary"
+                                (click)="selectTask(i);modalRef.hide()">
                             Select
                         </button>
                     </div>

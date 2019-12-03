@@ -1,4 +1,4 @@
 export interface ParentTask {
     parentTaskId : number;
-    parentTaskName : number;
+    parentTaskName : string;
 }
