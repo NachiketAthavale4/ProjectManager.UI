@@ -8,7 +8,9 @@
         </div>
         <div class="col-9 col-sm-9 col-md-4 col-lg-4">
             <input class="form-control" id="projectNameId" 
-                   name="projectNameField">
+                   name="projectNameField"
+                   [(ngModel)]="projectName"
+                   placeholder="Select Project to View Tasks">
         </div>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
             <button type="button" class="btn btn-success btn-block"
@@ -20,7 +22,8 @@
             <b>Sort:</b>
         </div>
         <div class="col-6 col-sm-6 col-md-2 col-lg-2">
-            <button type="button" class="btn btn-secondary btn-block btn-sm">
+            <button type="button" class="btn btn-secondary btn-block btn-sm"
+                    (click)="sortByStartDate()">
                 Start Date
             </button>
             <button type="button" class="btn btn-secondary btn-block btn-sm">
@@ -39,7 +42,7 @@
     <hr>
     <br>
     <ul class="list-group">
-        <li class="list-group-item" *ngFor="let task of taskList">
+        <li class="list-group-item" *ngFor="let task of taskList;index as i">
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-2 col-lg-2">
                     <h6>Task</h6>
@@ -53,21 +56,27 @@
                     <h6>Priority</h6>
                     {{ task.priority }}
                 </div>
-                <div class="col-4 col-sm-4 col-md-2 col-lg-2">
+                <div class="col-4 col-sm-4 col-md-1 col-lg-1">
                     <h6>Start Date</h6>
-                    {{ task.startDate | date}}
+                    {{ task.startDate | date:"shortDate"}}
                 </div>
-                <div class="col-4 col-sm-4 col-md-2 col-lg-2">
+                <div class="col-4 col-sm-4 col-md-1 col-lg-1">
                     <h6>End Date</h6>
-                    {{ task.startDate | date}}
+                    {{ task.startDate | date:"shortDate"}}
                 </div>
-                <div class=" col-12 col-sm-12 col-md-1 col-lg-1 align-self-end">
+                <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+                    <h6>Status</h6>
+                    {{ task.status }}
+                </div>
+                <div class=" col-12 col-sm-12 col-md-1 col-lg-1 align-self-center">
                     <button class="btn btn-success" type="button">
                         Edit
                     </button>
                 </div>
-                <div class=" col-12 col-sm-12 col-md-2 col-lg-2 align-self-end">
-                    <button class="btn btn-danger" type="button">
+                <div class=" col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+                    <button class="btn btn-danger" type="button" 
+                            *ngIf="task.status != 'Completed'"
+                            (click)="endTask(i)">
                         End Task
                     </button>
                 </div>
@@ -112,7 +121,7 @@
                     </div>
                     <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                         <button type="button" class="btn btn-primary"
-                                (click)="modalRef.hide()">
+                                (click)="selectProject(i);modalRef.hide()">
                             Select
                         </button>
                     </div>

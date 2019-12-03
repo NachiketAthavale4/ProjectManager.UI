@@ -42,7 +42,12 @@ export class ViewTaskComponent implements OnInit {
       }
   }
 
-  taskList: Task[] = [
+  projectName : string = null;
+  projectId : number = null;
+
+  taskList : Task[] = [];
+
+  totalTaskList: Task[] = [
     {
       startDate : new Date(Date.now()),
       endDate : new Date(Date.now()),
@@ -108,6 +113,21 @@ export class ViewTaskComponent implements OnInit {
     this.queryField.setValue(null);
     this.searchList = this.projectList;
     this.modalRef = this.modalService.show(template);
+  }
+
+  selectProject(i : number){
+    this.projectName = this.searchList[i].projectName;
+    this.projectId = this.searchList[i].projectId;
+    this.taskList = this.totalTaskList.filter(x => x.projectId = this.projectId);
+  }
+
+  endTask(i : number){
+    console.log(i);
+    this.taskList[i].status = "Completed";
+  }
+
+  sortByStartDate(){
+    this.taskList = this.taskList.sort((a,b) => a.startDate.getDate() - b.startDate.getDate());
   }
 
 }
