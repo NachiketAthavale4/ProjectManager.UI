@@ -9,13 +9,11 @@
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
             <input type="text" class="form-control" 
                    id="projectNameId" name="projectNameField"
-                   readonly
-                   [(ngModel)]="projectName">
+                   readonly>
         </div>
         <br/>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
-            <button class="btn btn-success btn-block" type="button"
-                    (click)="openProjectModal(projectTemplate)">
+            <button class="btn btn-success btn-block" type="button">
                 Select Project
             </button>
         </div>
@@ -121,12 +119,10 @@
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
             <input type="text" class="form-control" 
                    id="addUserId" name="addUserField"
-                   [(ngModel)]="taskUser"
                    readonly>
         </div>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
-            <button class="btn btn-success btn-block" type="button"
-                    (click)="openModal(template)">
+            <button class="btn btn-success btn-block" type="button">
                 Add User
             </button>
         </div>
@@ -148,114 +144,3 @@
     </div>
 
 </div>
-
-<ng-template #template>
-    <div class="modal-header">
-      <h4 class="modal-title pull-left">Add User</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="container">
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                <input type="text" class="form-control" id="searchUserFieldId" 
-                       placeholder="Search User"
-                       [formControl]="queryField">
-            </div>
-            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                <button class="btn btn-success" type="button"
-                        (click)="searchUser()">
-                    Search
-                </button>
-            </div>
-        </div>
-        <br>
-
-
-        <ul class="list-group listoverflow">
-            <li class="list-group-item list-group-item-action" *ngFor="let user of searchUserList;index as i">
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                        <b>Name: </b> {{ user.firstName }} {{ user.lastName }}
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                        <b>Employee ID: </b> {{ user.employeeId }}
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                        <button type="button" class="btn btn-primary"
-                                (click)="addUser(i);modalRef.hide()">
-                            Select
-                        </button>
-                    </div>
-                </div>
-            </li>
-        </ul>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" 
-              aria-label="Close" (click)="modalRef.hide()">
-          Close
-      </button>
-    </div>
-  </ng-template>
-
-
-
-
-
-
-  <ng-template #projectTemplate>
-    <div class="modal-header">
-      <h4 class="modal-title pull-left">Add Project</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="container">
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                <input type="text" class="form-control" id="searchUserFieldId" 
-                       placeholder="Search Project"
-                       [formControl]="queryProjectField">
-            </div>
-            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                <button class="btn btn-success" type="button"
-                        (click)="searchProject()">
-                    Search
-                </button>
-            </div>
-        </div>
-        <br>
-
-
-        <ul class="list-group listoverflow">
-            <li class="list-group-item list-group-item-action" *ngFor="let project of searchProjectList;index as i">
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                        <b>Project Title: </b> {{ project.projectName }}
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                        <b>Manager: </b> {{ project.managedBy }}
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                        <button type="button" class="btn btn-primary"
-                                (click)="selectProject(i);modalRef.hide()">
-                            Select
-                        </button>
-                    </div>
-                </div>
-            </li>
-        </ul>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" 
-              aria-label="Close" (click)="modalRef.hide()">
-          Close
-      </button>
-    </div>
-  </ng-template>

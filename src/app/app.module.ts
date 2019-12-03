@@ -19,6 +19,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateProjectComponent } from './add-project/create-project/create-project.component';
 import { ViewProjectComponent } from './add-project/view-project/view-project.component';
+import { UpdateTaskComponent } from './view-task/update-task/update-task.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ViewProjectComponent } from './add-project/view-project/view-project.co
     CreateUserComponent,
     ViewUserComponent,
     CreateProjectComponent,
-    ViewProjectComponent
+    ViewProjectComponent,
+    UpdateTaskComponent
   ],
   imports: [
     BrowserModule,
