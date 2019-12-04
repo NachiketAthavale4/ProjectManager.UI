@@ -1,5 +1,6 @@
 <div class="container">
     <br>
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
     <div class="form-group row">
         <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
             <label for="projectNameId">
@@ -10,7 +11,13 @@
             <input type="text" class="form-control" 
                    id="projectNameId" name="projectNameField"
                    readonly
-                   [(ngModel)]="projectName">
+                   [(ngModel)]="projectName"
+                   required #projectNameField = "ngModel"
+                   [class.field-error]="form.submitted && projectNameField.invalid">
+            <div class="alert alert-danger"
+                 [hidden] = "!form.submitted || projectNameField.valid">
+                Please Select Project
+            </div>
         </div>
         <br/>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
@@ -29,7 +36,14 @@
         </div>
         <div class="col-12 col-sm-12 col-md-10 col-lg-10">
             <input type="text" class="form-control" 
-                   id="newTaskId" name="newTaskField">
+                   id="newTaskId" name="newTaskField"
+                   [(ngModel)]="taskName"
+                   required #taskNameField = "ngModel"
+                   [class.field-error]="form.submitted && taskNameField.invalid">
+            <div class="alert alert-danger"
+                 [hidden] = "!form.submitted || taskNameField.valid">
+                Provide Task Title
+            </div>
         </div>
     </div>
 
@@ -41,6 +55,7 @@
                 <div class="form-check-inline">
                     <label class="form-check-label">
                         <input type="checkbox" class="form-check-input"
+                               id="parentTaskCheckboxId" name="ParentTaskCheckboxName"
                                [(ngModel)]="isTaskParent">Parent Task
                     </label>
                 </div>
@@ -63,8 +78,8 @@
                    *ngIf="!isTaskParent">
             <input type="range" class="custom-range" 
                    id="priorityTaskId" name="priorityTaskField"
-                   min=0 max=30 step="1" value="0"
-                   *ngIf="isTaskParent" disabled>
+                   min=0 max=30 step="1" value="0" disabled
+                   *ngIf="isTaskParent" >
         </div>
         <div class="col-1 col-sm-1 col-md-1 col-lg-1">
             30
@@ -125,16 +140,25 @@
                 placeholder="Enter End Date"
                 class="form-control"
                 bsDatepicker
-                [bsConfig]="{ adaptivePosition: true }"
+                [bsConfig]="{ adaptivePosition: true, minDate: taskStartDate }"
                 id="taskEndDateId"
                 name="taskEndDateField" *ngIf="!isTaskParent"
-                [(ngModel)]="taskEndDate">
+                [(ngModel)]="taskEndDate"
+                #endDateField = "ngModel"
+                [class.field-error]="form.submitted && !endDateValid">
             <input  type="text"
                 placeholder="Enter End Date"
                 class="form-control"
                 bsDatepicker
                 [bsConfig]="{ adaptivePosition: true }"
                 *ngIf="isTaskParent" disabled>
+        </div>
+        <div class="col-md-2 col-lg-2">
+
+        </div>
+        <div class="col-12 col-sm-12 col-md-10 col-lg-10 alert alert-danger"
+             [hidden] = "!form.submitted || endDateValid">
+            End Date Smaller Than Start Date
         </div>
     </div>
 
@@ -148,7 +172,13 @@
             <input type="text" class="form-control" 
                    id="addUserId" name="addUserField"
                    [(ngModel)]="taskUser"
-                   readonly>
+                   readonly required
+                   #addUserFieldName="ngModel"
+                   [class.field-error]="form.submitted && addUserFieldName.invalid">
+            <div class="alert alert-danger"
+                 [hidden] = "!form.submitted || addUserFieldName.valid">
+                Please Select User
+            </div>
         </div>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
             <button class="btn btn-success btn-block" type="button"
@@ -176,7 +206,7 @@
             Reset
         </button>
     </div>
-
+    </form>
 </div>
 
 <ng-template #template>

@@ -1,10 +1,11 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { User } from '../models/user';
-import { FormControl } from '@angular/forms';
+import { FormControl, NgForm } from '@angular/forms';
 import { Project } from '../models/project';
 import { Task } from '../models/task';
 import { ParentTask } from '../models/parent-task';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-add-task',
@@ -86,6 +87,18 @@ export class AddTaskComponent implements OnInit {
     }
   }
 
+  onSubmit(form : NgForm){
+    console.log("Form Submitted");
+    if(this.taskEndDate < this.taskStartDate){
+      this.endDateValid = false;
+      console.log(this.endDateValid);
+    }
+    else {
+      this.endDateValid = true;
+      console.log(this.endDateValid);
+    }
+  }
+
   modalRef: BsModalRef;
 
   parentTaskName : string;
@@ -93,6 +106,8 @@ export class AddTaskComponent implements OnInit {
   searchUserList : User[];
   taskUser : string;
   projectName : string;
+
+  endDateValid : boolean;
 
   userList : User[] = [
     {
@@ -183,6 +198,7 @@ export class AddTaskComponent implements OnInit {
     this.parentTaskName = this.searchTaskList[i].parentTaskName;
   }
 
+  taskName : string;
   taskStartDate : Date;
   taskEndDate : Date;
   isTaskParent: boolean = false;
