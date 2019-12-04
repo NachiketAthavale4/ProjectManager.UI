@@ -1,9 +1,11 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, Input } from '@angular/core';
 import { ParentTask } from 'src/app/models/parent-task';
 import { Project } from 'src/app/models/project';
 import { User } from 'src/app/models/user';
 import { FormControl, NgForm } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ActivatedRoute } from '@angular/router';
+import { Task } from 'src/app/models/task';
 
 @Component({
   selector: 'app-update-task',
@@ -16,9 +18,19 @@ export class UpdateTaskComponent implements OnInit {
   queryProjectField : FormControl = new FormControl();
   queryTaskField : FormControl = new FormControl();
 
-  constructor(private modalService: BsModalService) { }
+  constructor(private modalService: BsModalService, private route: ActivatedRoute) { }
 
   ngOnInit() {
+
+    this.updateTaskId = +this.route.snapshot.queryParamMap.get("taskId");
+    let projectId = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].projectId;
+    this.projectName = this.projectList.filter(x => x.projectId == projectId)[0].projectName;
+    
+    let routeParentTaskId =
+     this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].parentTaskId;
+    this.parentTaskName =
+     this.taskList.filter(x => x.parentTaskId == routeParentTaskId)[0].parentTaskName;
+
     this.taskStartDate = new Date(Date.now());
     this.taskEndDate = new Date();
     this.taskEndDate.setDate(this.taskStartDate.getDate() + 1);
@@ -66,6 +78,8 @@ export class UpdateTaskComponent implements OnInit {
     );
   }
 
+  updateTaskId : number;
+
   searchUser(){
     if(this.searchUserText != null){
       this.searchUserList = 
@@ -94,8 +108,11 @@ export class UpdateTaskComponent implements OnInit {
     else {
       this.endDateValid = true;
       console.log(this.endDateValid);
+      this.taskUpdateSuccess = true;
     }
   }
+
+  taskUpdateSuccess : boolean;
 
   modalRef: BsModalRef;
 
@@ -103,7 +120,7 @@ export class UpdateTaskComponent implements OnInit {
   searchUserText : string;
   searchUserList : User[];
   taskUser : string;
-  projectName : string;
+  @Input() projectName : string;
 
   endDateValid : boolean;
 
@@ -240,6 +257,42 @@ export class UpdateTaskComponent implements OnInit {
     {
       parentTaskId : 2,
       parentTaskName : "Execute Order 68"
+    }
+  ];
+
+  baseTaskList : Task[] = [
+    {
+      startDate : new Date(Date.now()),
+      endDate : new Date(Date.now()),
+      taskName : 'SearchWorkItems',
+      priority : 11,
+      status : 'In Progress',
+      taskId : 2,
+      parentTaskId : 1,
+      parentTaskName : 'WorkItems',
+      projectId : 1
+    },
+    {
+      startDate : new Date(Date.now()),
+      endDate : new Date(Date.now()),
+      taskName : 'SaveWorkItems',
+      priority : 11,
+      status : 'In Progress',
+      taskId : 3,
+      parentTaskId : 1,
+      parentTaskName : 'WorkItems',
+      projectId : 1
+    },
+    {
+      startDate : new Date(Date.now()),
+      endDate : new Date(Date.now()),
+      taskName : 'ListWorkItems',
+      priority : 11,
+      status : 'In Progress',
+      taskId : 4,
+      parentTaskId : null,
+      parentTaskName : null,
+      projectId : 1
     }
   ];
 
