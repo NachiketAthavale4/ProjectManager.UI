@@ -1,1 +1,372 @@
-<h1>Update-Task-Works</h1>
+<div class="container">
+    <br>
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="projectNameId">
+                <b>Project:</b>
+            </label>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+            <input type="text" class="form-control" 
+                   id="projectNameId" name="projectNameField"
+                   readonly
+                   [(ngModel)]="projectName"
+                   required #projectNameField = "ngModel"
+                   [class.field-error]="form.submitted && projectNameField.invalid">
+            <div class="alert alert-danger"
+                 [hidden] = "!form.submitted || projectNameField.valid">
+                Please Select Project
+            </div>
+        </div>
+        <br/>
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <button class="btn btn-success btn-block" type="button"
+                    (click)="openProjectModal(projectTemplate)">
+                Select Project
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="newTaskId">
+                <b>Task:</b>
+            </label>
+        </div>
+        <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+            <input type="text" class="form-control" 
+                   id="newTaskId" name="newTaskField"
+                   [(ngModel)]="taskName"
+                   required #taskNameField = "ngModel"
+                   [class.field-error]="form.submitted && taskNameField.invalid">
+            <div class="alert alert-danger"
+                 [hidden] = "!form.submitted || taskNameField.valid">
+                Provide Task Title
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            
+        </div>
+            <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+                <div class="form-check-inline">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input"
+                               id="parentTaskCheckboxId" name="ParentTaskCheckboxName"
+                               [(ngModel)]="isTaskParent">Parent Task
+                    </label>
+                </div>
+            </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="priorityTaskId">
+                <b>Priority:</b>
+            </label>
+        </div>
+        <div class="col-1 col-sm-1 col-md-1 col-lg-1">
+            0
+        </div>
+        <div class="col-10 col-sm-10 col-md-8 col-lg-8">
+            <input type="range" class="custom-range" 
+                   id="priorityTaskId" name="priorityTaskField"
+                   min=0 max=30 step="1" value="0"
+                   *ngIf="!isTaskParent">
+            <input type="range" class="custom-range" 
+                   id="priorityTaskId" name="priorityTaskField"
+                   min=0 max=30 step="1" value="0" disabled
+                   *ngIf="isTaskParent" >
+        </div>
+        <div class="col-1 col-sm-1 col-md-1 col-lg-1">
+            30
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="parentTaskId">
+                <b>Parent Task:</b>
+            </label>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+            <input type="text" class="form-control" 
+                   id="parentTaskId" name="parentTaskField"
+                   readonly [(ngModel)]="parentTaskName">
+        </div>
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <button class="btn btn-success btn-block" type="button"
+                    (click)="openTemplateModal(parentTaskTemplate)"
+                    *ngIf="!isTaskParent">
+                Select Task
+            </button>
+            <button class="btn btn-success btn-block" type="button" *ngIf="isTaskParent"
+                    disabled>
+                Select Task
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-6 col-sm-6 col-md-2 col-lg-2 align-self-center">
+            <label for="taskStartDateId">
+                <b>Start Date:</b>
+            </label>
+        </div>
+        <div class="col-6 col-sm-6 col-md-4 col-lg-4">
+            <input  type="text"
+                placeholder="Enter Start Date"
+                class="form-control"
+                bsDatepicker
+                [bsConfig]="{ adaptivePosition: true }"
+                id="taskStartDateId"
+                name="taskStartDateField" *ngIf="!isTaskParent"
+                [(ngModel)]="taskStartDate">
+            <input  type="text"
+                placeholder="Enter End Date"
+                class="form-control"
+                bsDatepicker
+                [bsConfig]="{ adaptivePosition: true }"
+                *ngIf="isTaskParent" disabled>
+        </div>
+        <div class="col-6 col-sm-6 col-md-2 col-lg-2 align-self-center">
+            <b>End Date:</b>
+        </div>
+        <div class="col-6 col-sm-6 col-md-4 col-lg-4">
+            <input  type="text"
+                placeholder="Enter End Date"
+                class="form-control"
+                bsDatepicker
+                [bsConfig]="{ adaptivePosition: true, minDate: taskStartDate }"
+                id="taskEndDateId"
+                name="taskEndDateField" *ngIf="!isTaskParent"
+                [(ngModel)]="taskEndDate"
+                #endDateField = "ngModel"
+                [class.field-error]="form.submitted && !endDateValid">
+            <input  type="text"
+                placeholder="Enter End Date"
+                class="form-control"
+                bsDatepicker
+                [bsConfig]="{ adaptivePosition: true }"
+                *ngIf="isTaskParent" disabled>
+        </div>
+        <div class="col-md-2 col-lg-2">
+
+        </div>
+        <div class="col-12 col-sm-12 col-md-10 col-lg-10 alert alert-danger"
+             [hidden] = "!form.submitted || endDateValid">
+            End Date Smaller Than Start Date
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="addUserId">
+                <b>User:</b>
+            </label>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+            <input type="text" class="form-control" 
+                   id="addUserId" name="addUserField"
+                   [(ngModel)]="taskUser"
+                   readonly required
+                   #addUserFieldName="ngModel"
+                   [class.field-error]="form.submitted && addUserFieldName.invalid">
+            <div class="alert alert-danger"
+                 [hidden] = "!form.submitted || addUserFieldName.valid">
+                Please Select User
+            </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <button class="btn btn-success btn-block" type="button"
+                    (click)="openModal(template)" *ngIf="!isTaskParent">
+                Add User
+            </button>
+            <button class="btn btn-success btn-block" type="button"
+                    (click)="openModal(template)" *ngIf="isTaskParent" disabled>
+                Add User
+            </button>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="form-group row">
+        <button 
+            class="btn btn-primary ml-auto mr-2 col-5 col-sm-5 col-md-4 col-lg-3" 
+            type="submit">
+            Add Task
+        </button>
+        <button 
+            class="btn btn-danger mr-auto col-5 col-sm-5 col-md-4 col-lg-3" 
+            type="reset">
+            Reset
+        </button>
+    </div>
+    </form>
+</div>
+
+<ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Add User</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                <input type="text" class="form-control" id="searchUserFieldId" 
+                       placeholder="Search User"
+                       [formControl]="queryField">
+            </div>
+            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                <button class="btn btn-success" type="button"
+                        (click)="searchUser()">
+                    Search
+                </button>
+            </div>
+        </div>
+        <br>
+
+
+        <ul class="list-group listoverflow">
+            <li class="list-group-item list-group-item-action" *ngFor="let user of searchUserList;index as i">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <b>Name: </b> {{ user.firstName }} {{ user.lastName }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <b>Employee ID: </b> {{ user.employeeId }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <button type="button" class="btn btn-primary"
+                                (click)="addUser(i);modalRef.hide()">
+                            Select
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" 
+              aria-label="Close" (click)="modalRef.hide()">
+          Close
+      </button>
+    </div>
+  </ng-template>
+
+
+
+
+
+
+  <ng-template #projectTemplate>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Add Project</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                <input type="text" class="form-control" id="searchUserFieldId" 
+                       placeholder="Search Project"
+                       [formControl]="queryProjectField">
+            </div>
+            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                <button class="btn btn-success" type="button"
+                        (click)="searchProject()">
+                    Search
+                </button>
+            </div>
+        </div>
+        <br>
+
+
+        <ul class="list-group listoverflow">
+            <li class="list-group-item list-group-item-action" *ngFor="let project of searchProjectList;index as i">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <b>Project Title: </b> {{ project.projectName }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <b>Manager: </b> {{ project.managedBy }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <button type="button" class="btn btn-primary"
+                                (click)="selectProject(i);modalRef.hide()">
+                            Select
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" 
+              aria-label="Close" (click)="modalRef.hide()">
+          Close
+      </button>
+    </div>
+  </ng-template>
+
+
+  <ng-template #parentTaskTemplate>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Add ParentTask</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                <input type="text" class="form-control" id="searchUserFieldId" 
+                       placeholder="Search Parent Task"
+                       [formControl]="queryTaskField">
+            </div>
+            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                <button class="btn btn-success" type="button"
+                        (click)="searchTask()">
+                    Search
+                </button>
+            </div>
+        </div>
+        <br>
+
+
+        <ul class="list-group listoverflow">
+            <li class="list-group-item list-group-item-action" *ngFor="let task of searchTaskList;index as i">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                        <b>Task Name: </b> {{ task.parentTaskName }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <button type="button" class="btn btn-primary"
+                                (click)="selectTask(i);modalRef.hide()">
+                            Select
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" 
+              aria-label="Close" (click)="modalRef.hide()">
+          Close
+      </button>
+    </div>
+  </ng-template>

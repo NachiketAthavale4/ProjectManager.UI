@@ -3,9 +3,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { User } from '../models/user';
 import { FormControl, NgForm } from '@angular/forms';
 import { Project } from '../models/project';
-import { Task } from '../models/task';
 import { ParentTask } from '../models/parent-task';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-add-task',
