@@ -20,6 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateProjectComponent } from './add-project/create-project/create-project.component';
 import { ViewProjectComponent } from './add-project/view-project/view-project.component';
 import { UpdateTaskComponent } from './view-task/update-task/update-task.component';
+import { TaskViewComponent } from './view-task/task-view/task-view.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { UpdateTaskComponent } from './view-task/update-task/update-task.compone
     ViewUserComponent,
     CreateProjectComponent,
     ViewProjectComponent,
-    UpdateTaskComponent
+    UpdateTaskComponent,
+    TaskViewComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +45,6 @@ import { UpdateTaskComponent } from './view-task/update-task/update-task.compone
     FormsModule,
     RouterModule.forRoot([
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      
       { 
         path: 'dashboard', 
         component: DashboardComponent, 
@@ -52,7 +53,15 @@ import { UpdateTaskComponent } from './view-task/update-task/update-task.compone
           { path: 'add-project', component: AddProjectComponent },
           { path: 'add-task', component: AddTaskComponent },
           { path: 'add-user', component: AddUserComponent },
-          { path: 'view-task', component: ViewTaskComponent },
+          { 
+            path: 'view-task', 
+            component: ViewTaskComponent,
+            children: [
+              { path: '', redirectTo: 'view', pathMatch: 'full' },
+              { path: "update-task", component: UpdateTaskComponent },
+              { path: "view", component: TaskViewComponent }
+            ]
+          },
           { path: '**', component: PageNotFoundComponent }
         ] 
       },
