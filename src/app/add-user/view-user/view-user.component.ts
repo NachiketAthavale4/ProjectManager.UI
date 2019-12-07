@@ -1,25 +1,61 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { FormControl } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-view-user',
   templateUrl: './view-user.component.html',
-  styleUrls: ['./view-user.component.css']
+  styleUrls: ['./view-user.component.css'],
+  providers: [ UserService ]
 })
 export class ViewUserComponent implements OnInit {
 
-  queryField : FormControl = new FormControl();
-  constructor() { }
+  constructor(private userService: UserService) { }
 
+  // Update User Properties.
+
+  editUserIndex : number = null;
+  editEmployeeId : number;
+  editUserFirstName : string;
+  editUserLastName : string;
+  onUpdateActive : boolean = false;
+
+  // Form Control to search Users.
+  queryField : FormControl = new FormControl();
+
+  // Text to be searched inputted by the User.
+  searchText : string = null;
+
+  // List of users that have been searched. By default set to all users.
+  searchList : User[];
+
+  // List which will contain all the Users from database.
+  userList : User[];
+
+  // Initialization Lifecycle hook.
   ngOnInit() {
-    this.searchList = this.userList;
+    this.userService.getUser().subscribe((users) => {
+      console.log('Success');
+      this.userList = users;
+      this.searchList = this.userList;
+    },
+      (error) => {
+        console.log(error)
+      });
+
     this.queryField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
           console.log("Result: ",result);
           if(result=="" || result==" "){
-            this.searchList = this.userList;
+            this.userService.getUser().subscribe((users) => {
+              this.userList = users;
+              this.searchList = this.userList;
+            },
+              (error) => {
+                console.log(error)
+              });
           }
           else{
             this.searchText = result;
@@ -29,79 +65,25 @@ export class ViewUserComponent implements OnInit {
     );
   }
 
-  sortByFirstName(){
-    this.searchList = this.searchList.sort((x,y) => x.firstName.localeCompare(y.firstName));
-  }
-
-  sortByLastName(){
-    this.searchList = this.searchList.sort((x,y) => x.lastName.localeCompare(y.lastName));
-  }
-
-  sortByEmployeeId(){
+  // Search users based on text inputted by user.
+  searchUser(){
+    this.userService.getUser().subscribe((users) => {
+      this.userList = users;
+      this.searchList = this.userList;
+      if(this.searchText != null){
+        this.searchList = 
+          this.userList.filter(x => x.firstName.toUpperCase().includes(this.searchText.toUpperCase())
+                                || x.lastName.toUpperCase().includes(this.searchText.toUpperCase()));
+        }
+    },
+      (error) => {
+        console.log(error)
+      });
+    console.log(this.searchText);
     
   }
 
-  searchList : User[];
-
-  userList : User[] = [
-    {
-      employeeId : 666298,
-      firstName : "Nachiket",
-      lastName : "Athavale",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666299,
-      firstName : "Obi-Wan",
-      lastName : "Kenobi",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666300,
-      firstName : "Sheev",
-      lastName : "Palpatine",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666301,
-      firstName : "Anakin",
-      lastName : "Skywalker",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666302,
-      firstName : "Master",
-      lastName : "Windu",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666303,
-      firstName : "Qui-Gon",
-      lastName : "Jin",
-      taskId : null,
-      projectId : null,
-      userId : null
-    }
-  ];
-
-  editEmployeeId : number;
-  editUserFirstName : string;
-  editUserLastName : string;
-  onUpdateActive : boolean = false;
-  searchText : string = null;
-
-  editUserIndex : number = null;
-
+  // Updates a user's details
   editUser(i : number){
     console.log(this.userList[i].employeeId);
     this.editEmployeeId = this.userList[i].employeeId;
@@ -112,22 +94,13 @@ export class ViewUserComponent implements OnInit {
     console.log("Edit-User OnUpdate",this.onUpdateActive);
   }
 
+  // Delete a user from Project Manager system.
   deleteUser(i : number){
     console.log(this.userList[i].employeeId);
     this.searchList.splice(i,1);
   }
 
-  searchUser(){
-    console.log(this.searchText);
-    if(this.searchText != null){
-    this.searchList = 
-      this.userList.filter(x => x.firstName.toUpperCase().includes(this.searchText.toUpperCase())
-                                || x.lastName.toUpperCase().includes(this.searchText.toUpperCase())
-                                || (this.searchText.includes(" ") && x.firstName.toUpperCase().includes(this.searchText.toUpperCase())
-                                    && x.lastName.toUpperCase().includes(this.searchText.toUpperCase())));
-    }
-  }
-
+  // Method ran from Nested Component Create User, when that user is updated.
   onNotify(user : User) : void {
     if(user != null && user.employeeId != null){
       console.log("Notify Ran");
@@ -146,5 +119,20 @@ export class ViewUserComponent implements OnInit {
       this.editUserIndex = null;
     }
   }
+
+  // Sort Methods to sort users.
+  sortByFirstName(){
+    this.searchList = this.searchList.sort((x,y) => x.firstName.localeCompare(y.firstName));
+  }
+
+  sortByLastName(){
+    this.searchList = this.searchList.sort((x,y) => x.lastName.localeCompare(y.lastName));
+  }
+
+  sortByEmployeeId(){
+    
+  }
+
+  
 
 }
