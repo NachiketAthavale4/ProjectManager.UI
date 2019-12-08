@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { FormControl } from '@angular/forms';
+import { NotifierService } from 'angular-notifier';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -11,7 +12,11 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class ViewUserComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+  private notifier: NotifierService;
+
+  constructor(private userService: UserService, notifier: NotifierService) {
+    this.notifier = notifier;
+  }
 
   // Update User Properties.
 
@@ -35,6 +40,10 @@ export class ViewUserComponent implements OnInit {
 
   // List which will contain all the Users from database.
   userList : User[];
+
+  sortOrderEmployeeId : boolean = false;
+  sortOrderFirstName : boolean = false;
+  sortOrderLastName : boolean = false;
 
   // Initialization Lifecycle hook.
   ngOnInit() {
@@ -86,6 +95,10 @@ export class ViewUserComponent implements OnInit {
     
   }
 
+  public showNotification( type: string, message: string ): void {
+		this.notifier.notify( type, message );
+  }
+
   // Updates a user's details
   editUser(i : number){
     console.log(this.userList[i].employeeId);
@@ -104,10 +117,27 @@ export class ViewUserComponent implements OnInit {
   deleteUser(i : number){
     console.log(this.userList[i].employeeId);
     this.userService.deleteUser(this.searchList[i]).subscribe((data) => {
-      
+      this.userService.getUser().subscribe((users) => {
+        this.userList = users;
+        this.searchList = this.userList;
+        if(this.sortOrderEmployeeId){
+          this.sortByEmployeeId();
+        }
+        else if(this.sortOrderFirstName){
+          this.sortByFirstName();
+        }
+        else if(this.sortOrderLastName){
+          this.sortByLastName();
+        }
+      },
+        (error) => {
+          console.log(error)
+        });
+      this.showNotification('success','User Deleted Successfully');
     },
       (error) => {
-
+        console.log(error);
+        this.showNotification('error','Some problem occurred while deleting');
       });
   }
 
@@ -121,6 +151,15 @@ export class ViewUserComponent implements OnInit {
       this.userService.getUser().subscribe((users) => {
         this.userList = users;
         this.searchList = this.userList;
+        if(this.sortOrderEmployeeId){
+          this.sortByEmployeeId();
+        }
+        else if(this.sortOrderFirstName){
+          this.sortByFirstName();
+        }
+        else if(this.sortOrderLastName){
+          this.sortByLastName();
+        }
       },
         (error) => {
           console.log(error)
@@ -145,14 +184,23 @@ export class ViewUserComponent implements OnInit {
   // Sort Methods to sort users.
   sortByFirstName(){
     this.searchList = this.searchList.sort((x,y) => x.firstName.localeCompare(y.firstName));
+    this.sortOrderEmployeeId = false;
+    this.sortOrderFirstName = true;
+    this.sortOrderLastName = false;
   }
 
   sortByLastName(){
     this.searchList = this.searchList.sort((x,y) => x.lastName.localeCompare(y.lastName));
+    this.sortOrderEmployeeId = false;
+    this.sortOrderFirstName = false;
+    this.sortOrderLastName = true;
   }
 
   sortByEmployeeId(){
     this.searchList = this.searchList.sort((x,y) => x.employeeId - y.employeeId);
+    this.sortOrderEmployeeId = true;
+    this.sortOrderFirstName = false;
+    this.sortOrderLastName = false;
   }
 
 }

@@ -91,6 +91,14 @@ export class CreateUserComponent implements OnInit, OnChanges {
       if(this.updateIndicator){
           this.userService.updateUser(this.updatedUser).subscribe((data) => {
             this.showNotification('success','User Updated Successfully');
+            this.user = {
+              employeeId : this.editEmployeeId,
+              firstName : this.editFirstName,
+              lastName : this.editLastName,
+              userId : this.editUserId,
+              projectId : this.editProjectId,
+              taskId  : this.editTaskId
+            };
             console.log("Emit: ",this.user.employeeId);
             this.notify.emit(this.user);
           },
@@ -106,8 +114,19 @@ export class CreateUserComponent implements OnInit, OnChanges {
         this.user.employeeId = null;
       }
       else{
-        this.userService.addUser(this.user).subscribe((data) => {
+        this.editEmployeeId = this.user.employeeId;
+        this.editFirstName = this.user.firstName;
+        this.editLastName = this.user.lastName;
+        this.userService.addUser(this.updatedUser).subscribe((data) => {
           this.showNotification('success','User Added Successfully');
+          this.user = {
+            employeeId : this.editEmployeeId,
+            firstName : this.editFirstName,
+            lastName : this.editLastName,
+            projectId : null,
+            taskId : null,
+            userId : null
+          }
           this.notify.emit(this.user);
         },
           (error) => {
