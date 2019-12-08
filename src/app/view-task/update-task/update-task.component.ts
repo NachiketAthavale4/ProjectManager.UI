@@ -1,16 +1,20 @@
 import { Component, OnInit, TemplateRef, Input } from '@angular/core';
 import { ParentTask } from 'src/app/models/parent-task';
+import { NotifierService } from 'angular-notifier';
 import { Project } from 'src/app/models/project';
 import { User } from 'src/app/models/user';
 import { FormControl, NgForm } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ActivatedRoute } from '@angular/router';
 import { Task } from 'src/app/models/task';
+import { TaskService } from 'src/app/services/task-service';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-update-task',
   templateUrl: './update-task.component.html',
-  styleUrls: ['./update-task.component.css']
+  styleUrls: ['./update-task.component.css'],
+  providers: [ TaskService, ProjectService ]
 })
 export class UpdateTaskComponent implements OnInit {
 
@@ -18,19 +22,46 @@ export class UpdateTaskComponent implements OnInit {
   queryProjectField : FormControl = new FormControl();
   queryTaskField : FormControl = new FormControl();
 
-  constructor(private modalService: BsModalService, private route: ActivatedRoute) { }
+  private notifier: NotifierService;
+
+  constructor(private modalService: BsModalService, private route: ActivatedRoute,
+    notifier: NotifierService,private taskService: TaskService,private projectService: ProjectService) {
+      this.notifier = notifier;
+  }
 
   ngOnInit() {
-
+    this.updateprojectId = +this.route.snapshot.queryParamMap.get("projectId");
     this.updateTaskId = +this.route.snapshot.queryParamMap.get("taskId");
-    let projectId = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].project_ID;
-    this.projectName = this.projectList.filter(x => x.projectId == projectId)[0].projectName;
-    
-    let routeParentTaskId =
-     this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].parent_ID;
-    this.parentTaskName =
-     this.taskList.filter(x => x.parentTaskId == routeParentTaskId)[0].parentTaskName;
 
+    this.taskService.getAllTasksByProjectId(this.updateprojectId).subscribe((tasks) => {
+      this.baseTaskList = tasks;
+      this.projectService.getProject().subscribe((project) => {
+        this.projectList = project;
+        this.projectName = 
+          this.projectList.filter(x => x.projectId == this.updateprojectId)[0].projectName
+      },
+        (error) => {
+          console.log(error);
+          this.showNotification('error','Some problem occurred while fetching records');
+      });
+      this.routeParentTaskId =
+        this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].parent_ID;
+        this.taskService.getParentTask().subscribe((data) => {
+          this.taskList = data;
+          this.parentTaskName = 
+            this.taskList.filter(x => x.parentTaskId == this.routeParentTaskId)[0].parentTaskName;
+        },
+        (error) => {
+          console.log(error);
+          this.showNotification('error','Some problem occurred while fetching records');
+        });
+    },
+    (error) => {
+      console.log(error);
+      this.showNotification('error','Some problem occurred.')
+    });
+
+    
     this.taskStartDate = new Date(Date.now());
     this.taskEndDate = new Date();
     this.taskEndDate.setDate(this.taskStartDate.getDate() + 1);
@@ -78,7 +109,13 @@ export class UpdateTaskComponent implements OnInit {
     );
   }
 
+  updateprojectId : number;
   updateTaskId : number;
+  routeParentTaskId : number;
+
+  public showNotification( type: string, message: string ): void {
+		this.notifier.notify( type, message );
+  }
 
   searchUser(){
     if(this.searchUserText != null){

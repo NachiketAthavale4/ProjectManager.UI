@@ -71,7 +71,7 @@
                 <div class=" col-12 col-sm-12 col-md-1 col-lg-1 align-self-center">
                     <button class="btn btn-success" type="button"
                             [routerLink]="['/dashboard','view-task','update-task']"
-                            [queryParams] = "{ taskId: task.taskId }">
+                            [queryParams] = "{ projectId: projectId , taskId: task.taskId}">
                         Edit
                     </button>
                 </div>
