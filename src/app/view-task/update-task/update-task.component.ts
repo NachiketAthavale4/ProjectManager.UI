@@ -10,6 +10,8 @@ import { Task } from 'src/app/models/task';
 import { TaskService } from 'src/app/services/task-service';
 import { ProjectService } from 'src/app/services/project.service';
 import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
+import { setTime } from 'ngx-bootstrap/chronos/utils/date-setters';
 
 @Component({
   selector: 'app-update-task',
@@ -27,7 +29,7 @@ export class UpdateTaskComponent implements OnInit {
 
   constructor(private modalService: BsModalService, private route: ActivatedRoute,
     notifier: NotifierService,private taskService: TaskService,private projectService: ProjectService,
-    private userService : UserService) {
+    private userService : UserService, private router: Router) {
       this.notifier = notifier;
   }
 
@@ -52,12 +54,15 @@ export class UpdateTaskComponent implements OnInit {
 
         this.updateUser = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].user;
 
+        this.updateTaskStatus = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].status;
+
         this.userService.getUser().subscribe((users)=>{
           this.userList = users;
           this.searchUserList = this.userList;
           this.taskUser = 
             this.userList.filter(x => x.userId == this.updateUser.userId)[0].firstName + " "
-                          + this.userList.filter(x => x.userId == this.updateUser.userId)[0].lastName
+                          + this.userList.filter(x => x.userId == this.updateUser.userId)[0].lastName;
+            this.updateUser = this.userList.filter(x => x.userId == this.updateUser.userId)[0];
         },
         (error)=>{
           console.log(error);
@@ -67,6 +72,7 @@ export class UpdateTaskComponent implements OnInit {
         this.taskService.getParentTask().subscribe((data) => {
           console.log("Parent Task Success");
           this.taskList = data;
+          this.searchTaskList = this.taskList;
           this.parentTaskName = 
             this.taskList.filter(x => x.parentTaskId == this.routeParentTaskId)[0].parentTaskName;
         },
@@ -88,16 +94,20 @@ export class UpdateTaskComponent implements OnInit {
       console.log(error);
       this.showNotification('error','Some problem occurred.')
     });
-
     
-    this.searchProjectList = this.projectList;
-    this.searchTaskList = this.taskList;
     this.queryField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
           console.log("Result: ",result);
           if(result=="" || result==" "){
-            this.searchUserList = this.userList;
+            this.userService.getUser().subscribe((users)=>{
+              this.userList = users;
+              this.searchUserList = this.userList;
+            },
+            (error)=>{
+              console.log(error);
+              this.showNotification('error','Some problem occurred while fetching records');
+            });
           }
           else{
             this.searchUserText = result;
@@ -105,25 +115,20 @@ export class UpdateTaskComponent implements OnInit {
         }
       } 
     );
-    this.queryProjectField.valueChanges.subscribe(
-      (result : string) => {
-        if(result != null){
-          console.log("Result: ",result);
-          if(result=="" || result==" "){
-            this.searchProjectList = this.projectList;
-          }
-          else{
-            this.searchProjectText = result;
-          }
-        }
-      } 
-    );
+    
     this.queryTaskField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
           console.log("Result: ",result);
           if(result=="" || result==" "){
-            this.searchTaskList = this.taskList;
+            this.taskService.getParentTask().subscribe((data) => {
+              this.taskList = data;
+              this.searchTaskList = this.taskList;
+            },
+            (error) => {
+              console.log(error);
+              this.showNotification('error','Some problem occurred while fetching records');
+            });
           }
           else{
             this.searchTaskText = result;
@@ -138,6 +143,9 @@ export class UpdateTaskComponent implements OnInit {
   routeParentTaskId : number;
   taskPriority : number;
   updateUser : User;
+  updateTaskStatus : number;
+
+  selectedTask : ParentTask;
 
   public showNotification( type: string, message: string ): void {
 		this.notifier.notify( type, message );
@@ -145,14 +153,22 @@ export class UpdateTaskComponent implements OnInit {
 
   searchUser(){
     if(this.searchUserText != null){
+      let searchTextCombined = this.searchUserText.split(' ');
       this.searchUserList = 
         this.userList.filter(x => x.firstName.toUpperCase().includes(this.searchUserText.toUpperCase())
-                                  || x.lastName.toUpperCase().includes(this.searchUserText.toUpperCase()));
+                                  || x.lastName.toUpperCase().includes(this.searchUserText.toUpperCase())
+                                  || (x.firstName.toUpperCase()+x.lastName.toUpperCase()).includes(searchTextCombined.join("").toUpperCase()));
       }
+  }
+
+  clearParentTask(){
+    this.parentTaskName = null;
+    this.selectedTask = null;
   }
 
   addUser(i : number){
     this.taskUser = this.searchUserList[i].firstName + " " + this.searchUserList[i].lastName;
+    this.selectedUser = this.searchUserList[i];
   }
 
   searchTask(){
@@ -164,20 +180,49 @@ export class UpdateTaskComponent implements OnInit {
 
   onSubmit(form : NgForm){
     console.log("Form Submitted");
-    if(this.taskEndDate < this.taskStartDate){
-      this.endDateValid = false;
-      console.log(this.endDateValid);
+    if(form.valid){
+      if(this.taskEndDate < this.taskStartDate){
+        this.endDateValid = false;
+      }
+      else {
+        this.endDateValid = true;
+        this.updateTask = {
+          end_Date : this.taskEndDate,
+          start_Date : this.taskStartDate,
+          priority : this.taskPriority,
+          taskId : this.updateTaskId,
+          task_Name : this.taskName,
+          user : this.updateUser,
+          status : this.updateTaskStatus,
+          parent_ID : this.routeParentTaskId,
+          parentTaskName : this.parentTaskName,
+          project_ID : this.updateprojectId
+
+        };
+        this.taskService.updateTask(this.updateTask).subscribe((data) => {
+          this.showNotification('success','Task Updated Successfully');
+          form.onReset();
+          this.routeBack();
+        },
+        (error) => {
+          this.showNotification('error','Some Error Occurred');
+        })
+      }
     }
-    else {
-      this.endDateValid = true;
-      console.log(this.endDateValid);
-      this.taskUpdateSuccess = true;
-    }
+    
+  }
+
+  routeBack(){
+    setTimeout(() => {
+      this.router.navigate(['/dashboard','view-task','view']);
+    },3000);
   }
 
   taskUpdateSuccess : boolean;
 
   modalRef: BsModalRef;
+  selectedUser : User;
+  updateTask : Task;
 
   parentTaskName : string;
   searchUserText : string;
@@ -187,93 +232,40 @@ export class UpdateTaskComponent implements OnInit {
 
   endDateValid : boolean;
 
-  userList : User[] = [
-    {
-      employeeId : 666298,
-      firstName : "Nachiket",
-      lastName : "Athavale",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666299,
-      firstName : "Obi-Wan",
-      lastName : "Kenobi",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666300,
-      firstName : "Sheev",
-      lastName : "Palpatine",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666301,
-      firstName : "Anakin",
-      lastName : "Skywalker",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666302,
-      firstName : "Master",
-      lastName : "Windu",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666303,
-      firstName : "Qui-Gon",
-      lastName : "Jin",
-      taskId : null,
-      projectId : null,
-      userId : null
-    }
-  ];
+  userList : User[];
 
   openModal(template: TemplateRef<any>) {
     this.searchUserText = null;
     this.queryField.setValue(null);
-    this.searchUserList = this.userList;
-    this.modalRef = this.modalService.show(template);
-  }
-
-  openProjectModal(template: TemplateRef<any>){
-    this.searchProjectText = null;
-    this.queryProjectField.setValue(null);
-    this.searchProjectList = this.projectList;
+    this.userService.getUser().subscribe((users)=>{
+      this.userList = users;
+      this.searchUserList = this.userList;
+    },
+    (error)=>{
+      console.log(error);
+      this.showNotification('error','Some problem occurred while fetching records');
+    });
     this.modalRef = this.modalService.show(template);
   }
 
   openTemplateModal(template: TemplateRef<any>){
-    this.searchTaskList = this.taskList;
+    this.taskService.getParentTask().subscribe((data) => {
+      this.taskList = data;
+      this.searchTaskList = this.taskList;
+    },
+    (error) => {
+      console.log(error);
+      this.showNotification('error','Some problem occurred while fetching records');
+    });
     this.searchTaskText = null;
     this.queryTaskField.setValue(null);
     this.modalRef = this.modalService.show(template);
   }
 
-  selectProject(i: number){
-    this.projectName = this.searchProjectList[i].projectName;
-  }
-
-  searchProject(){
-    if(this.searchProjectText != null){
-      this.searchProjectList = 
-        this.projectList.filter(x => x.projectName.toUpperCase().includes(
-          this.searchProjectText.toUpperCase()));
-      }
-  }
-
   selectTask(i : number){
     console.log(i);
     this.parentTaskName = this.searchTaskList[i].parentTaskName;
+    this.selectedTask = this.searchTaskList[i];
   }
 
   taskName : string;
@@ -283,83 +275,12 @@ export class UpdateTaskComponent implements OnInit {
   searchProjectText : string;
   searchProjectList : Project[];
 
-  projectList : Project[] = [
-    {
-      projectId : 1,
-      status : "In Progress",
-      managedBy : "Anakin Skywalker",
-      numOfTasks : 4,
-      priorty : 10,
-      projectName: "WorkItem",
-      startDate : new Date(Date.now()),
-      endDate : new Date(Date.now())
-    },
-    {
-      projectId : 2,
-      status : "Completed",
-      managedBy : "Darth Vader",
-      numOfTasks : 2,
-      priorty : 15,
-      projectName: "WorkOrders",
-      startDate : new Date(Date.now()),
-      endDate : new Date(Date.now())
-    }
-  ];
+  projectList : Project[];
 
   searchTaskText : string;
   searchTaskList : ParentTask[];
-  taskList : ParentTask[] = [
-    {
-      parentTaskId : 1,
-      parentTaskName : "Execute Order 66"
-    },
-    {
-      parentTaskId : 2,
-      parentTaskName : "Execute Order 67"
-    },
-    {
-      parentTaskId : 2,
-      parentTaskName : "Execute Order 68"
-    }
-  ];
+  taskList : ParentTask[];
 
-  baseTaskList : Task[] = [
-    {
-      start_Date : new Date(Date.now()),
-      end_Date : new Date(Date.now()),
-      task_Name : 'SearchWorkItems',
-      priority : 11,
-      status : 0,
-      taskId : 2,
-      parent_ID : 1,
-      parentTaskName : 'WorkItems',
-      project_ID : 1,
-      user : null
-    },
-    {
-      start_Date : new Date(Date.now()),
-      end_Date : new Date(Date.now()),
-      task_Name : 'SaveWorkItems',
-      priority : 11,
-      status : 0,
-      taskId : 3,
-      parent_ID : 1,
-      parentTaskName : 'WorkItems',
-      project_ID : 1,
-      user : null
-    },
-    {
-      start_Date : new Date(Date.now()),
-      end_Date : new Date(Date.now()),
-      task_Name : 'ListWorkItems',
-      priority : 11,
-      status : 0,
-      taskId : 4,
-      parent_ID : null,
-      parentTaskName : null,
-      project_ID : 1,
-      user : null
-    }
-  ];
+  baseTaskList : Task[];
 
 }
