@@ -9,12 +9,13 @@ import { ActivatedRoute } from '@angular/router';
 import { Task } from 'src/app/models/task';
 import { TaskService } from 'src/app/services/task-service';
 import { ProjectService } from 'src/app/services/project.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-update-task',
   templateUrl: './update-task.component.html',
   styleUrls: ['./update-task.component.css'],
-  providers: [ TaskService, ProjectService ]
+  providers: [ TaskService, ProjectService, UserService ]
 })
 export class UpdateTaskComponent implements OnInit {
 
@@ -25,7 +26,8 @@ export class UpdateTaskComponent implements OnInit {
   private notifier: NotifierService;
 
   constructor(private modalService: BsModalService, private route: ActivatedRoute,
-    notifier: NotifierService,private taskService: TaskService,private projectService: ProjectService) {
+    notifier: NotifierService,private taskService: TaskService,private projectService: ProjectService,
+    private userService : UserService) {
       this.notifier = notifier;
   }
 
@@ -35,6 +37,43 @@ export class UpdateTaskComponent implements OnInit {
 
     this.taskService.getAllTasksByProjectId(this.updateprojectId).subscribe((tasks) => {
       this.baseTaskList = tasks;
+      console.log("Length",this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].parent_ID);
+      this.routeParentTaskId =
+        this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].parent_ID;
+        this.taskStartDate = 
+          new Date(this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].start_Date);
+
+        this.taskEndDate = 
+          new Date(this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].end_Date);
+
+        this.taskPriority = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].priority;
+
+        this.taskName = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].task_Name;
+
+        this.updateUser = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].user;
+
+        this.userService.getUser().subscribe((users)=>{
+          this.userList = users;
+          this.searchUserList = this.userList;
+          this.taskUser = 
+            this.userList.filter(x => x.userId == this.updateUser.userId)[0].firstName + " "
+                          + this.userList.filter(x => x.userId == this.updateUser.userId)[0].lastName
+        },
+        (error)=>{
+          console.log(error);
+          this.showNotification('error','Some problem occurred while fetching records');
+        });
+
+        this.taskService.getParentTask().subscribe((data) => {
+          console.log("Parent Task Success");
+          this.taskList = data;
+          this.parentTaskName = 
+            this.taskList.filter(x => x.parentTaskId == this.routeParentTaskId)[0].parentTaskName;
+        },
+        (error) => {
+          console.log(error);
+          this.showNotification('error','Some problem occurred while fetching records');
+        });
       this.projectService.getProject().subscribe((project) => {
         this.projectList = project;
         this.projectName = 
@@ -44,17 +83,6 @@ export class UpdateTaskComponent implements OnInit {
           console.log(error);
           this.showNotification('error','Some problem occurred while fetching records');
       });
-      this.routeParentTaskId =
-        this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].parent_ID;
-        this.taskService.getParentTask().subscribe((data) => {
-          this.taskList = data;
-          this.parentTaskName = 
-            this.taskList.filter(x => x.parentTaskId == this.routeParentTaskId)[0].parentTaskName;
-        },
-        (error) => {
-          console.log(error);
-          this.showNotification('error','Some problem occurred while fetching records');
-        });
     },
     (error) => {
       console.log(error);
@@ -62,10 +90,6 @@ export class UpdateTaskComponent implements OnInit {
     });
 
     
-    this.taskStartDate = new Date(Date.now());
-    this.taskEndDate = new Date();
-    this.taskEndDate.setDate(this.taskStartDate.getDate() + 1);
-    this.searchUserList = this.userList;
     this.searchProjectList = this.projectList;
     this.searchTaskList = this.taskList;
     this.queryField.valueChanges.subscribe(
@@ -112,6 +136,8 @@ export class UpdateTaskComponent implements OnInit {
   updateprojectId : number;
   updateTaskId : number;
   routeParentTaskId : number;
+  taskPriority : number;
+  updateUser : User;
 
   public showNotification( type: string, message: string ): void {
 		this.notifier.notify( type, message );
