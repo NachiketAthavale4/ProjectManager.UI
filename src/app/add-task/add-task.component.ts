@@ -6,12 +6,13 @@ import { Project } from '../models/project';
 import { ParentTask } from '../models/parent-task';
 import { NotifierService } from 'angular-notifier';
 import { UserService } from '../services/user.service';
+import { ProjectService } from '../services/project.service';
 
 @Component({
   selector: 'app-add-task',
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.css'],
-  providers: [ UserService ]
+  providers: [ UserService, ProjectService ]
 })
 export class AddTaskComponent implements OnInit {
 
@@ -22,7 +23,7 @@ export class AddTaskComponent implements OnInit {
   private notifier: NotifierService;
 
   constructor(private modalService: BsModalService,private userService: UserService, 
-    notifier: NotifierService) { 
+    notifier: NotifierService, private projectService: ProjectService) { 
       this.notifier = notifier;
     }
 
@@ -41,7 +42,16 @@ export class AddTaskComponent implements OnInit {
       }
     );
 
-    this.searchProjectList = this.projectList;
+    this.projectService.getProject().subscribe((project) => {
+      this.projectList = project;
+      this.searchProjectList = this.projectList;
+    },
+      (error) => {
+        console.log(error);
+        this.showNotification('error','Some problem occurred while fetching records');
+      });
+
+    
     this.searchTaskList = this.taskList;
     this.queryField.valueChanges.subscribe(
       (result : string) => {
@@ -64,12 +74,20 @@ export class AddTaskComponent implements OnInit {
         }
       } 
     );
+
     this.queryProjectField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
           console.log("Result: ",result);
           if(result=="" || result==" "){
-            this.searchProjectList = this.projectList;
+            this.projectService.getProject().subscribe((project) => {
+              this.projectList = project;
+              this.searchProjectList = this.projectList;
+            },
+              (error) => {
+                console.log(error);
+                this.showNotification('error','Some problem occurred while fetching records');
+              });
           }
           else{
             this.searchProjectText = result;
@@ -132,6 +150,13 @@ export class AddTaskComponent implements OnInit {
     }
   }
 
+  resetFields(){
+    this.selectedUser = null;
+    this.taskUser = null;
+    this.selectedProject = null;
+    this.projectName = null;
+  }
+
   modalRef: BsModalRef;
 
   parentTaskName : string;
@@ -140,6 +165,7 @@ export class AddTaskComponent implements OnInit {
   taskUser : string;
   selectedUser : User;
   projectName : string;
+  selectedProject : Project;
 
   endDateValid : boolean;
 
@@ -163,7 +189,14 @@ export class AddTaskComponent implements OnInit {
   openProjectModal(template: TemplateRef<any>){
     this.searchProjectText = null;
     this.queryProjectField.setValue(null);
-    this.searchProjectList = this.projectList;
+    this.projectService.getProject().subscribe((project) => {
+      this.projectList = project;
+      this.searchProjectList = this.projectList;
+    },
+      (error) => {
+        console.log(error);
+        this.showNotification('error','Some problem occurred while fetching records');
+      });
     this.modalRef = this.modalService.show(template);
   }
 
@@ -176,6 +209,7 @@ export class AddTaskComponent implements OnInit {
 
   selectProject(i: number){
     this.projectName = this.searchProjectList[i].projectName;
+    this.selectedProject = this.searchProjectList[i];
   }
 
   searchProject(){
@@ -198,28 +232,7 @@ export class AddTaskComponent implements OnInit {
   searchProjectText : string;
   searchProjectList : Project[];
 
-  projectList : Project[] = [
-    {
-      projectId : 1,
-      status : "In Progress",
-      managedBy : "Anakin Skywalker",
-      numOfTasks : 4,
-      priorty : 10,
-      projectName: "WorkItem",
-      startDate : new Date(Date.now()),
-      endDate : new Date(Date.now())
-    },
-    {
-      projectId : 2,
-      status : "Completed",
-      managedBy : "Darth Vader",
-      numOfTasks : 2,
-      priorty : 15,
-      projectName: "WorkOrders",
-      startDate : new Date(Date.now()),
-      endDate : new Date(Date.now())
-    }
-  ];
+  projectList : Project[];
 
   searchTaskText : string;
   searchTaskList : ParentTask[];

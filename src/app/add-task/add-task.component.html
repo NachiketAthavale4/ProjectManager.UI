@@ -56,7 +56,8 @@
                     <label class="form-check-label">
                         <input type="checkbox" class="form-check-input"
                                id="parentTaskCheckboxId" name="ParentTaskCheckboxName"
-                               [(ngModel)]="isTaskParent">Parent Task
+                               [(ngModel)]="isTaskParent"
+                               (change)="resetFields()">Parent Task
                     </label>
                 </div>
             </div>
