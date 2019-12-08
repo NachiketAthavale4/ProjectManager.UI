@@ -49,37 +49,40 @@ export class TaskViewComponent implements OnInit {
 
   totalTaskList: Task[] = [
     {
-      startDate : new Date(Date.now()),
-      endDate : new Date(Date.now()),
-      taskName : 'SearchWorkItems',
-      priority : 11,
-      status : 'In Progress',
-      taskId : 2,
-      parentTaskId : 1,
-      parentTaskName : 'WorkItems',
-      projectId : 1
+      Start_Date : new Date(Date.now()),
+      End_Date : new Date(Date.now()),
+      Task_Name : 'SearchWorkItems',
+      Priority : 11,
+      Status : 'In Progress',
+      TaskId : 2,
+      Parent_ID : 1,
+      ParentTaskName : 'WorkItems',
+      Project_ID : 1,
+      User : null
     },
     {
-      startDate : new Date(Date.now()),
-      endDate : new Date(Date.now()),
-      taskName : 'SaveWorkItems',
-      priority : 11,
-      status : 'In Progress',
-      taskId : 3,
-      parentTaskId : 1,
-      parentTaskName : 'WorkItems',
-      projectId : 1
+      Start_Date : new Date(Date.now()),
+      End_Date : new Date(Date.now()),
+      Task_Name : 'SaveWorkItems',
+      Priority : 11,
+      Status : 'In Progress',
+      TaskId : 3,
+      Parent_ID : 1,
+      ParentTaskName : 'WorkItems',
+      Project_ID : 1,
+      User : null
     },
     {
-      startDate : new Date(Date.now()),
-      endDate : new Date(Date.now()),
-      taskName : 'ListWorkItems',
-      priority : 11,
-      status : 'In Progress',
-      taskId : 4,
-      parentTaskId : null,
-      parentTaskName : null,
-      projectId : 1
+      Start_Date : new Date(Date.now()),
+      End_Date : new Date(Date.now()),
+      Task_Name : 'ListWorkItems',
+      Priority : 11,
+      Status : 'In Progress',
+      TaskId : 4,
+      Parent_ID : null,
+      ParentTaskName : null,
+      Project_ID : 1,
+      User : null
     }
   ];
 
@@ -118,16 +121,16 @@ export class TaskViewComponent implements OnInit {
   selectProject(i : number){
     this.projectName = this.searchList[i].projectName;
     this.projectId = this.searchList[i].projectId;
-    this.taskList = this.totalTaskList.filter(x => x.projectId == this.projectId);
+    this.taskList = this.totalTaskList.filter(x => x.Project_ID == this.projectId);
     console.log(this.taskList.length);
   }
 
   endTask(i : number){
     console.log(i);
-    this.taskList[i].status = "Completed";
+    this.taskList[i].Status = "Completed";
   }
 
   sortByStartDate(){
-    this.taskList = this.taskList.sort((a,b) => a.startDate.getDate() - b.startDate.getDate());
+    this.taskList = this.taskList.sort((a,b) => a.Start_Date.getDate() - b.Start_Date.getDate());
   }
 }

@@ -8,9 +8,9 @@ import { BaseService } from './base.service';
 import { ParentTask } from '../models/parent-task';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
-export class TaskServiceService extends BaseService {
+export class TaskService extends BaseService {
   constructor(private http: HttpClient) {
     super();
 }

@@ -1,11 +1,14 @@
+import { User } from './user';
+
 export interface Task {
-    taskId : number;
-    parentTaskId : number;
-    parentTaskName : string;
-    projectId : number;
-    taskName : string;
-    startDate : Date;
-    endDate : Date;
-    priority: number;
-    status : string;
+    TaskId : number;
+    Parent_ID : number;
+    ParentTaskName : string;
+    Project_ID : number;
+    Task_Name : string;
+    Start_Date : Date;
+    End_Date : Date;
+    Priority: number;
+    Status : string;
+    User : User;
 }

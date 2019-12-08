@@ -23,11 +23,11 @@ export class UpdateTaskComponent implements OnInit {
   ngOnInit() {
 
     this.updateTaskId = +this.route.snapshot.queryParamMap.get("taskId");
-    let projectId = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].projectId;
+    let projectId = this.baseTaskList.filter(x => x.TaskId == this.updateTaskId)[0].Project_ID;
     this.projectName = this.projectList.filter(x => x.projectId == projectId)[0].projectName;
     
     let routeParentTaskId =
-     this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].parentTaskId;
+     this.baseTaskList.filter(x => x.TaskId == this.updateTaskId)[0].Parent_ID;
     this.parentTaskName =
      this.taskList.filter(x => x.parentTaskId == routeParentTaskId)[0].parentTaskName;
 
@@ -262,37 +262,40 @@ export class UpdateTaskComponent implements OnInit {
 
   baseTaskList : Task[] = [
     {
-      startDate : new Date(Date.now()),
-      endDate : new Date(Date.now()),
-      taskName : 'SearchWorkItems',
-      priority : 11,
-      status : 'In Progress',
-      taskId : 2,
-      parentTaskId : 1,
-      parentTaskName : 'WorkItems',
-      projectId : 1
+      Start_Date : new Date(Date.now()),
+      End_Date : new Date(Date.now()),
+      Task_Name : 'SearchWorkItems',
+      Priority : 11,
+      Status : 'In Progress',
+      TaskId : 2,
+      Parent_ID : 1,
+      ParentTaskName : 'WorkItems',
+      Project_ID : 1,
+      User : null
     },
     {
-      startDate : new Date(Date.now()),
-      endDate : new Date(Date.now()),
-      taskName : 'SaveWorkItems',
-      priority : 11,
-      status : 'In Progress',
-      taskId : 3,
-      parentTaskId : 1,
-      parentTaskName : 'WorkItems',
-      projectId : 1
+      Start_Date : new Date(Date.now()),
+      End_Date : new Date(Date.now()),
+      Task_Name : 'SaveWorkItems',
+      Priority : 11,
+      Status : 'In Progress',
+      TaskId : 3,
+      Parent_ID : 1,
+      ParentTaskName : 'WorkItems',
+      Project_ID : 1,
+      User : null
     },
     {
-      startDate : new Date(Date.now()),
-      endDate : new Date(Date.now()),
-      taskName : 'ListWorkItems',
-      priority : 11,
-      status : 'In Progress',
-      taskId : 4,
-      parentTaskId : null,
-      parentTaskName : null,
-      projectId : 1
+      Start_Date : new Date(Date.now()),
+      End_Date : new Date(Date.now()),
+      Task_Name : 'ListWorkItems',
+      Priority : 11,
+      Status : 'In Progress',
+      TaskId : 4,
+      Parent_ID : null,
+      ParentTaskName : null,
+      Project_ID : 1,
+      User : null
     }
   ];
 

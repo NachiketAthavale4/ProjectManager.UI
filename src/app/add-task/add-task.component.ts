@@ -7,12 +7,14 @@ import { ParentTask } from '../models/parent-task';
 import { NotifierService } from 'angular-notifier';
 import { UserService } from '../services/user.service';
 import { ProjectService } from '../services/project.service';
+import { TaskService } from '../services/task-service';
+import { Task } from '../models/task';
 
 @Component({
   selector: 'app-add-task',
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.css'],
-  providers: [ UserService, ProjectService ]
+  providers: [ UserService, ProjectService, TaskService ]
 })
 export class AddTaskComponent implements OnInit {
 
@@ -23,7 +25,8 @@ export class AddTaskComponent implements OnInit {
   private notifier: NotifierService;
 
   constructor(private modalService: BsModalService,private userService: UserService, 
-    notifier: NotifierService, private projectService: ProjectService) { 
+    notifier: NotifierService, private projectService: ProjectService,
+    private taskService: TaskService) { 
       this.notifier = notifier;
     }
 
@@ -51,8 +54,15 @@ export class AddTaskComponent implements OnInit {
         this.showNotification('error','Some problem occurred while fetching records');
       });
 
-    
-    this.searchTaskList = this.taskList;
+    this.taskService.getParentTask().subscribe((tasks) => {
+      this.taskList = tasks;
+      this.searchTaskList = this.taskList;
+    },
+    (error) => {
+      console.log(error);
+      this.showNotification('error','Some problem occurred while fetching records');
+    })
+
     this.queryField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
@@ -100,7 +110,14 @@ export class AddTaskComponent implements OnInit {
         if(result != null){
           console.log("Result: ",result);
           if(result=="" || result==" "){
-            this.searchTaskList = this.taskList;
+            this.taskService.getParentTask().subscribe((tasks) => {
+              this.taskList = tasks;
+              this.searchTaskList = this.taskList;
+            },
+            (error) => {
+              console.log(error);
+              this.showNotification('error','Some problem occurred while fetching records');
+            });
           }
           else{
             this.searchTaskText = result;
@@ -138,15 +155,39 @@ export class AddTaskComponent implements OnInit {
     }
   }
 
+  taskPriority : number;
+
   onSubmit(form : NgForm){
     console.log("Form Submitted");
-    if(this.taskEndDate < this.taskStartDate){
-      this.endDateValid = false;
-      console.log(this.endDateValid);
-    }
-    else {
-      this.endDateValid = true;
-      console.log(this.endDateValid);
+    if(form.valid){
+      if(this.taskEndDate < this.taskStartDate){
+        this.endDateValid = false;
+        console.log(this.endDateValid);
+      }
+      else {
+        this.endDateValid = true;
+        console.log(this.endDateValid);
+        this.addTask.End_Date = this.taskEndDate;
+        this.addTask.Start_Date = this.taskStartDate;
+        console.log(this.addTask.Start_Date);
+        console.log(this.addTask.End_Date);
+        this.addTask.Task_Name = this.taskName;
+        this.addTask.Project_ID = this.selectedProject.projectId;
+        this.addTask.Parent_ID = this.selectedTask.parentTaskId;
+        this.addTask.ParentTaskName = this.selectedTask.parentTaskName;
+        this.addTask.Priority = this.taskPriority;
+        this.addTask.User = this.selectedUser;
+        this.taskService.addTask(this.addTask).subscribe((data) => {
+          this.showNotification('success','Task inserted successfully');
+          console.log("SUccess");
+          this.resetFields();
+          form.onReset();
+        },
+          (error) => {
+            console.log(error);
+            this.showNotification('error','Some error occurred while inserting');
+          });
+      }
     }
   }
 
@@ -155,17 +196,35 @@ export class AddTaskComponent implements OnInit {
     this.taskUser = null;
     this.selectedProject = null;
     this.projectName = null;
+    this.parentTaskName = null;
+    this.selectedTask = null;
   }
 
   modalRef: BsModalRef;
 
   parentTaskName : string;
+  selectedTask : ParentTask;
+  selectedTaskIndex : number;
   searchUserText : string;
   searchUserList : User[];
   taskUser : string;
   selectedUser : User;
   projectName : string;
   selectedProject : Project;
+  selectedProjectIndex : number;
+
+  addTask : Task = {
+    Parent_ID : null,
+    End_Date : null,
+    ParentTaskName : null,
+    Priority : null,
+    Project_ID : null,
+    Start_Date : null,
+    Status : null,
+    TaskId : null,
+    Task_Name : null,
+    User : null
+  };
 
   endDateValid : boolean;
 
@@ -201,7 +260,14 @@ export class AddTaskComponent implements OnInit {
   }
 
   openTemplateModal(template: TemplateRef<any>){
-    this.searchTaskList = this.taskList;
+    this.taskService.getParentTask().subscribe((tasks) => {
+      this.taskList = tasks;
+      this.searchTaskList = this.taskList;
+    },
+    (error) => {
+      console.log(error);
+      this.showNotification('error','Some problem occurred while fetching records');
+    });
     this.searchTaskText = null;
     this.queryTaskField.setValue(null);
     this.modalRef = this.modalService.show(template);
@@ -210,6 +276,7 @@ export class AddTaskComponent implements OnInit {
   selectProject(i: number){
     this.projectName = this.searchProjectList[i].projectName;
     this.selectedProject = this.searchProjectList[i];
+    this.selectedProjectIndex = this.searchProjectList[i].projectId;
   }
 
   searchProject(){
@@ -223,6 +290,8 @@ export class AddTaskComponent implements OnInit {
   selectTask(i : number){
     console.log(i);
     this.parentTaskName = this.searchTaskList[i].parentTaskName;
+    this.selectedTask = this.searchTaskList[i];
+    this.selectedTaskIndex = this.searchTaskList[i].parentTaskId;
   }
 
   taskName : string;
