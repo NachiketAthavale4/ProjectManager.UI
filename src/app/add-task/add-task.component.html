@@ -173,11 +173,11 @@
             <input type="text" class="form-control" 
                    id="addUserId" name="addUserField"
                    [(ngModel)]="taskUser"
-                   readonly required
+                   readonly
                    #addUserFieldName="ngModel"
-                   [class.field-error]="form.submitted && addUserFieldName.invalid">
+                   [class.field-error]="form.submitted && addUserFieldName.invalid && !isTaskParent">
             <div class="alert alert-danger"
-                 [hidden] = "!form.submitted || addUserFieldName.valid">
+                 [hidden] = "!form.submitted || addUserFieldName.valid || isTaskParent">
                 Please Select User
             </div>
         </div>

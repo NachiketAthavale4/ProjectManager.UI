@@ -23,11 +23,11 @@ export class UpdateTaskComponent implements OnInit {
   ngOnInit() {
 
     this.updateTaskId = +this.route.snapshot.queryParamMap.get("taskId");
-    let projectId = this.baseTaskList.filter(x => x.TaskId == this.updateTaskId)[0].Project_ID;
+    let projectId = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].project_ID;
     this.projectName = this.projectList.filter(x => x.projectId == projectId)[0].projectName;
     
     let routeParentTaskId =
-     this.baseTaskList.filter(x => x.TaskId == this.updateTaskId)[0].Parent_ID;
+     this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].parent_ID;
     this.parentTaskName =
      this.taskList.filter(x => x.parentTaskId == routeParentTaskId)[0].parentTaskName;
 
@@ -262,40 +262,40 @@ export class UpdateTaskComponent implements OnInit {
 
   baseTaskList : Task[] = [
     {
-      Start_Date : new Date(Date.now()),
-      End_Date : new Date(Date.now()),
-      Task_Name : 'SearchWorkItems',
-      Priority : 11,
-      Status : 'In Progress',
-      TaskId : 2,
-      Parent_ID : 1,
-      ParentTaskName : 'WorkItems',
-      Project_ID : 1,
-      User : null
+      start_Date : new Date(Date.now()),
+      end_Date : new Date(Date.now()),
+      task_Name : 'SearchWorkItems',
+      priority : 11,
+      status : 0,
+      taskId : 2,
+      parent_ID : 1,
+      parentTaskName : 'WorkItems',
+      project_ID : 1,
+      user : null
     },
     {
-      Start_Date : new Date(Date.now()),
-      End_Date : new Date(Date.now()),
-      Task_Name : 'SaveWorkItems',
-      Priority : 11,
-      Status : 'In Progress',
-      TaskId : 3,
-      Parent_ID : 1,
-      ParentTaskName : 'WorkItems',
-      Project_ID : 1,
-      User : null
+      start_Date : new Date(Date.now()),
+      end_Date : new Date(Date.now()),
+      task_Name : 'SaveWorkItems',
+      priority : 11,
+      status : 0,
+      taskId : 3,
+      parent_ID : 1,
+      parentTaskName : 'WorkItems',
+      project_ID : 1,
+      user : null
     },
     {
-      Start_Date : new Date(Date.now()),
-      End_Date : new Date(Date.now()),
-      Task_Name : 'ListWorkItems',
-      Priority : 11,
-      Status : 'In Progress',
-      TaskId : 4,
-      Parent_ID : null,
-      ParentTaskName : null,
-      Project_ID : 1,
-      User : null
+      start_Date : new Date(Date.now()),
+      end_Date : new Date(Date.now()),
+      task_Name : 'ListWorkItems',
+      priority : 11,
+      status : 0,
+      taskId : 4,
+      parent_ID : null,
+      parentTaskName : null,
+      project_ID : 1,
+      user : null
     }
   ];
 

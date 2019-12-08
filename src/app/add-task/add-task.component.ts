@@ -34,6 +34,7 @@ export class AddTaskComponent implements OnInit {
     this.taskStartDate = new Date(Date.now());
     this.taskEndDate = new Date();
     this.taskEndDate.setDate(this.taskStartDate.getDate() + 1);
+    this.taskPriority = 0;
 
     this.userService.getUser().subscribe((users) => {
       this.userList = users;
@@ -159,7 +160,8 @@ export class AddTaskComponent implements OnInit {
 
   onSubmit(form : NgForm){
     console.log("Form Submitted");
-    if(form.valid){
+    if(form.valid && ((this.isTaskParent && this.taskUser == null) || 
+        (!this.isTaskParent && this.taskUser != null))){
       if(this.taskEndDate < this.taskStartDate){
         this.endDateValid = false;
         console.log(this.endDateValid);
@@ -167,16 +169,20 @@ export class AddTaskComponent implements OnInit {
       else {
         this.endDateValid = true;
         console.log(this.endDateValid);
-        this.addTask.End_Date = this.taskEndDate;
-        this.addTask.Start_Date = this.taskStartDate;
-        console.log(this.addTask.Start_Date);
-        console.log(this.addTask.End_Date);
-        this.addTask.Task_Name = this.taskName;
-        this.addTask.Project_ID = this.selectedProject.projectId;
-        this.addTask.Parent_ID = this.selectedTask.parentTaskId;
-        this.addTask.ParentTaskName = this.selectedTask.parentTaskName;
-        this.addTask.Priority = this.taskPriority;
-        this.addTask.User = this.selectedUser;
+        this.addTask.end_Date = this.taskEndDate;
+        this.addTask.start_Date = this.taskStartDate;
+        console.log(this.addTask.start_Date);
+        console.log(this.addTask.end_Date);
+        this.addTask.task_Name = this.taskName;
+        if(this.selectedProject != null){
+          this.addTask.project_ID = this.selectedProject.projectId;
+        }
+        if(this.selectedTask != null){
+          this.addTask.parent_ID = this.selectedTask.parentTaskId;
+          this.addTask.parentTaskName = this.selectedTask.parentTaskName;
+        }
+        this.addTask.priority = this.taskPriority;
+        this.addTask.user = this.selectedUser;
         this.taskService.addTask(this.addTask).subscribe((data) => {
           this.showNotification('success','Task inserted successfully');
           console.log("SUccess");
@@ -214,16 +220,16 @@ export class AddTaskComponent implements OnInit {
   selectedProjectIndex : number;
 
   addTask : Task = {
-    Parent_ID : null,
-    End_Date : null,
-    ParentTaskName : null,
-    Priority : null,
-    Project_ID : null,
-    Start_Date : null,
-    Status : null,
-    TaskId : null,
-    Task_Name : null,
-    User : null
+    parent_ID : null,
+    end_Date : null,
+    parentTaskName : null,
+    priority : null,
+    project_ID : null,
+    start_Date : null,
+    status : null,
+    taskId : null,
+    task_Name : null,
+    user : null
   };
 
   endDateValid : boolean;

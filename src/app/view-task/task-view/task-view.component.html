@@ -10,7 +10,7 @@
             <input class="form-control" id="projectNameId" 
                    name="projectNameField"
                    [(ngModel)]="projectName"
-                   placeholder="Select Project to View Tasks">
+                   placeholder="Select Project to View Tasks" readonly>
         </div>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
             <button type="button" class="btn btn-success btn-block"
@@ -45,28 +45,28 @@
         <li class="list-group-item" *ngFor="let task of taskList;index as i">
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-2 col-lg-2">
-                    <h6>Task</h6>
-                    {{ task.taskName }}
+                    <b>Task</b><br>
+                    {{ task.task_Name }}
                 </div>
                 <div class="col-12 col-sm-12 col-md-2 col-lg-2">
-                    <h6>Parent Task</h6>
+                    <b>Parent Task</b><br>
                     {{ task.parentTaskName }}
                 </div>
                 <div class="col-4 col-sm-4 col-md-1 col-lg-1">
-                    <h6>Priority</h6>
+                    <b>Priority</b><br>
                     {{ task.priority }}
                 </div>
                 <div class="col-4 col-sm-4 col-md-1 col-lg-1">
-                    <h6>Start Date</h6>
-                    {{ task.startDate | date:"shortDate"}}
+                    <b>Start Date</b><br>
+                    {{ task.start_Date | date:"shortDate"}}
                 </div>
                 <div class="col-4 col-sm-4 col-md-1 col-lg-1">
-                    <h6>End Date</h6>
-                    {{ task.startDate | date:"shortDate"}}
+                    <b>End Date</b><br>
+                    {{ task.end_Date | date:"shortDate"}}
                 </div>
                 <div class="col-12 col-sm-12 col-md-2 col-lg-2">
-                    <h6>Status</h6>
-                    {{ task.status }}
+                    <b>Status</b><br>
+                    {{ task.status == 1 ? 'Completed' : 'In-Progress' }}
                 </div>
                 <div class=" col-12 col-sm-12 col-md-1 col-lg-1 align-self-center">
                     <button class="btn btn-success" type="button"
@@ -85,6 +85,7 @@
             </div>
         </li>
     </ul>
+    <notifier-container></notifier-container>
 </div>
 
 <ng-template #template>
