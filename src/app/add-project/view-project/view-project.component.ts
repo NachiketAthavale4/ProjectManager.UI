@@ -62,7 +62,8 @@ export class ViewProjectComponent implements OnInit {
       projectId : 1,
       projectName : 'WorkItems',
       status : "In Progress",
-      managedBy : "Anakin Skywalker"
+      managedBy : "Anakin Skywalker",
+      User : null
     },
     {
       startDate : new Date(Date.now()),
@@ -72,7 +73,8 @@ export class ViewProjectComponent implements OnInit {
       projectId : 2,
       projectName : 'WorkOrders',
       status : "Completed",
-      managedBy : "Darth Vader"
+      managedBy : "Darth Vader",
+      User : null
     }
   ];
 

@@ -111,9 +111,38 @@ export class TaskViewComponent implements OnInit {
   endTask(i : number){
     console.log(i);
     this.taskList[i].status = 1;
+    this.taskService.updateTask(this.taskList[i]).subscribe((data)=> {
+      this.showNotification('success','Task Completed Successfully');
+      this.taskService.getAllTasksByProjectId(this.projectId).subscribe((tasks)=> {
+        this.taskList = tasks;
+      },
+      (error)=> {
+        console.log(error);
+        this.showNotification('error','Some Error Occurred');
+      })
+    },
+    (error)=> {
+      console.log(error);
+      this.showNotification('error','Some error occurred');
+    });
   }
 
   sortByStartDate(){
-    this.taskList = this.taskList.sort((a,b) => a.start_Date.getDate() - b.start_Date.getDate());
+    this.taskList = this.taskList.sort((a,b) => 
+      <any>new Date(a.start_Date) - <any>new Date(b.start_Date));
   }
+
+  sortByEndDate(){
+    this.taskList = this.taskList.sort((a,b) => 
+      <any>new Date(a.end_Date) - <any>new Date(b.end_Date));
+  }
+
+  sortByPriority(){
+    this.taskList = this.taskList.sort((x,y) => x.priority - y.priority);
+  }
+
+  sortByStatus(){
+    this.taskList = this.taskList.sort((x,y) => x.status - y.status);
+  }
+
 }

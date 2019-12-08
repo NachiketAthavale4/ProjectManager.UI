@@ -8,5 +8,6 @@ export interface Project {
     priorty : number;
     status : string;
     numOfTasks : number;
-    managedBy : string
+    managedBy : string,
+    User : User;
 }

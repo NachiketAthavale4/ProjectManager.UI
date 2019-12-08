@@ -77,7 +77,7 @@
                     placeholder="Enter End Date"
                     class="form-control"
                     bsDatepicker
-                    [bsConfig]="{ adaptivePosition: true }"
+                    [bsConfig]="{ adaptivePosition: true, minDate: projectData.startDate }"
                     id="projectEndDateId"
                     name="projectEndDateField"
                     *ngIf="projectDateEnabled && !updateIndicator"
@@ -88,7 +88,7 @@
                     placeholder="Enter End Date"
                     class="form-control"
                     bsDatepicker
-                    [bsConfig]="{ adaptivePosition: true }"
+                    [bsConfig]="{ adaptivePosition: true, minDate: projectData.startDate }"
                     id="updateProjectEndDateId"
                     name="updateProjectEndDateField"
                     *ngIf="updateIndicator"
@@ -122,7 +122,7 @@
             0
         </div>
         <div class="col-10 col-sm-10 col-md-8 col-lg-7">
-            <input type="range" class="form-control-range" 
+            <input type="range" class="custom-range" 
                    id="priorityProjectId" name="priorityProjectField"
                    [(ngModel)] = "projectData.priorty"
                    min=0 max=30 step="1" value=0>
