@@ -19,6 +19,9 @@ export class ViewUserComponent implements OnInit {
   editEmployeeId : number;
   editUserFirstName : string;
   editUserLastName : string;
+  editUserTaskId : number;
+  editUserProjectId : number;
+  editUserId : number;
   onUpdateActive : boolean = false;
 
   // Form Control to search Users.
@@ -89,21 +92,40 @@ export class ViewUserComponent implements OnInit {
     this.editEmployeeId = this.userList[i].employeeId;
     this.editUserFirstName = this.userList[i].firstName;
     this.editUserLastName = this.userList[i].lastName;
+    this.editUserTaskId = this.userList[i].taskId;
+    this.editUserProjectId = this.userList[i].projectId;
+    this.editUserId = this.userList[i].userId;
+    console.log(this.editUserId);
     this.onUpdateActive = true;
     this.editUserIndex = i;
-    console.log("Edit-User OnUpdate",this.onUpdateActive);
   }
 
   // Delete a user from Project Manager system.
   deleteUser(i : number){
     console.log(this.userList[i].employeeId);
-    this.searchList.splice(i,1);
+    this.userService.deleteUser(this.searchList[i]).subscribe((data) => {
+      
+    },
+      (error) => {
+
+      });
   }
 
   // Method ran from Nested Component Create User, when that user is updated.
   onNotify(user : User) : void {
+    console.log("Notify First Ran");
+    console.log(user);
     if(user != null && user.employeeId != null){
       console.log("Notify Ran");
+      
+      this.userService.getUser().subscribe((users) => {
+        this.userList = users;
+        this.searchList = this.userList;
+      },
+        (error) => {
+          console.log(error)
+        });
+
       if(this.editUserIndex != null){
         this.userList[this.editUserIndex].employeeId = user.employeeId;
         this.userList[this.editUserIndex].firstName = user.firstName;
@@ -130,9 +152,7 @@ export class ViewUserComponent implements OnInit {
   }
 
   sortByEmployeeId(){
-    
+    this.searchList = this.searchList.sort((x,y) => x.employeeId - y.employeeId);
   }
-
-  
 
 }

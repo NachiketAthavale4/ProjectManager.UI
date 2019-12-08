@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
 import { CreateUserComponent } from './create-user.component';
+import { UserService } from 'src/app/services/user.service';
+import { NotifierService } from 'angular-notifier';
 
 describe('CreateUserComponent', () => {
   let component: CreateUserComponent;
@@ -8,7 +11,9 @@ describe('CreateUserComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateUserComponent ]
+      declarations: [ CreateUserComponent, NotifierService ],
+      imports: [ FormsModule ],
+      providers: [ UserService, NotifierService ]
     })
     .compileComponents();
   }));

@@ -4,11 +4,14 @@ import { User } from '../models/user';
 import { FormControl, NgForm } from '@angular/forms';
 import { Project } from '../models/project';
 import { ParentTask } from '../models/parent-task';
+import { NotifierService } from 'angular-notifier';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-add-task',
   templateUrl: './add-task.component.html',
-  styleUrls: ['./add-task.component.css']
+  styleUrls: ['./add-task.component.css'],
+  providers: [ UserService ]
 })
 export class AddTaskComponent implements OnInit {
 
@@ -16,13 +19,28 @@ export class AddTaskComponent implements OnInit {
   queryProjectField : FormControl = new FormControl();
   queryTaskField : FormControl = new FormControl();
 
-  constructor(private modalService: BsModalService) { }
+  private notifier: NotifierService;
+
+  constructor(private modalService: BsModalService,private userService: UserService, 
+    notifier: NotifierService) { 
+      this.notifier = notifier;
+    }
 
   ngOnInit() {
     this.taskStartDate = new Date(Date.now());
     this.taskEndDate = new Date();
     this.taskEndDate.setDate(this.taskStartDate.getDate() + 1);
-    this.searchUserList = this.userList;
+
+    this.userService.getUser().subscribe((users) => {
+      this.userList = users;
+      this.searchUserList = this.userList;
+      },
+      (error) => {
+        console.log(error);
+        this.showNotification('error','Some problem occurred while fetching records');
+      }
+    );
+
     this.searchProjectList = this.projectList;
     this.searchTaskList = this.taskList;
     this.queryField.valueChanges.subscribe(
@@ -30,7 +48,15 @@ export class AddTaskComponent implements OnInit {
         if(result != null){
           console.log("Result: ",result);
           if(result=="" || result==" "){
-            this.searchUserList = this.userList;
+            this.userService.getUser().subscribe((users) => {
+              this.userList = users;
+              this.searchUserList = this.userList;
+              },
+              (error) => {
+                console.log(error);
+                this.showNotification('error','Some problem occurred while fetching records');
+              }
+            );
           }
           else{
             this.searchUserText = result;
@@ -68,14 +94,23 @@ export class AddTaskComponent implements OnInit {
 
   searchUser(){
     if(this.searchUserText != null){
+      let combinedSearchText = this.searchUserText.split(" ");
+      let combinedSearchString = combinedSearchText.join("");
+      console.log(combinedSearchString);
       this.searchUserList = 
         this.userList.filter(x => x.firstName.toUpperCase().includes(this.searchUserText.toUpperCase())
-                                  || x.lastName.toUpperCase().includes(this.searchUserText.toUpperCase()));
+                                  || x.lastName.toUpperCase().includes(this.searchUserText.toUpperCase())
+                                  || (x.firstName.toUpperCase() + x.lastName.toUpperCase()).includes(combinedSearchString.toUpperCase()));
       }
+  }
+
+  public showNotification( type: string, message: string ): void {
+		this.notifier.notify( type, message );
   }
 
   addUser(i : number){
     this.taskUser = this.searchUserList[i].firstName + " " + this.searchUserList[i].lastName;
+    this.selectedUser = this.searchUserList[i];
   }
 
   searchTask(){
@@ -103,65 +138,25 @@ export class AddTaskComponent implements OnInit {
   searchUserText : string;
   searchUserList : User[];
   taskUser : string;
+  selectedUser : User;
   projectName : string;
 
   endDateValid : boolean;
 
-  userList : User[] = [
-    {
-      employeeId : 666298,
-      firstName : "Nachiket",
-      lastName : "Athavale",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666299,
-      firstName : "Obi-Wan",
-      lastName : "Kenobi",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666300,
-      firstName : "Sheev",
-      lastName : "Palpatine",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666301,
-      firstName : "Anakin",
-      lastName : "Skywalker",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666302,
-      firstName : "Master",
-      lastName : "Windu",
-      taskId : null,
-      projectId : null,
-      userId : null
-    },
-    {
-      employeeId : 666303,
-      firstName : "Qui-Gon",
-      lastName : "Jin",
-      taskId : null,
-      projectId : null,
-      userId : null
-    }
-  ];
+  userList : User[];
 
   openModal(template: TemplateRef<any>) {
     this.searchUserText = null;
     this.queryField.setValue(null);
-    this.searchUserList = this.userList;
+    this.userService.getUser().subscribe((users) => {
+      this.userList = users;
+      this.searchUserList = this.userList;
+      },
+      (error) => {
+        console.log(error);
+        this.showNotification('error','Some problem occurred while fetching records');
+      }
+    );
     this.modalRef = this.modalService.show(template);
   }
 
