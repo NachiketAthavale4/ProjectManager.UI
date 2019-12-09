@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardComponent } from './dashboard.component';
+import { RouterModule, RouterLink } from '@angular/router';
+import { RouterLinkDirectiveStub } from '../testing/router-link-directive-stub';
+import {RouterTestingModule} from '@angular/router/testing'
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -8,7 +11,8 @@ describe('DashboardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardComponent ]
+      imports: [ RouterTestingModule ],
+      declarations: [ DashboardComponent, RouterLinkDirectiveStub ]
     })
     .compileComponents();
   }));

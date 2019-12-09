@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BsDatepickerModule } from 'ngx-bootstrap';
+import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { AddTaskComponent } from './add-task.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 describe('AddTaskComponent', () => {
   let component: AddTaskComponent;
@@ -8,7 +12,10 @@ describe('AddTaskComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddTaskComponent ]
+      declarations: [ AddTaskComponent ],
+      imports: [ FormsModule,
+         BsDatepickerModule.forRoot(), ReactiveFormsModule, NotifierModule, 
+         HttpClientModule, ModalModule.forRoot(),  ]
     })
     .compileComponents();
   }));
