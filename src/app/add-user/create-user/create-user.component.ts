@@ -13,7 +13,7 @@ import { NotifierService } from 'angular-notifier';
 export class CreateUserComponent implements OnInit, OnChanges {
   
   // Nested Component Properties, invoked when Update User.
-  @Input() onUpdateActive : boolean = false;
+  @Input() UpdateActive : boolean = false;
   @Input() editEmployeeId : number;
   @Input() editFirstName : string;
   @Input() editLastName : string;
@@ -61,13 +61,14 @@ export class CreateUserComponent implements OnInit, OnChanges {
     this.user.projectId = this.editProjectId;
     this.user.taskId = this.editTaskId;
     this.user.userId = this.editUserId;
-    this.updateIndicator = this.onUpdateActive;
+    this.updateIndicator = this.UpdateActive;
+    console.log('Update Indicator',this.updateIndicator)
 
     if(this.user.employeeId != null){
       this.user.employeeId = +this.user.employeeId.toString().trim();
     }
 
-    console.log("ngOnChanges",this.onUpdateActive);
+    console.log("ngOnChanges",this.UpdateActive);
   }
 
   public showNotification( type: string, message: string ): void {

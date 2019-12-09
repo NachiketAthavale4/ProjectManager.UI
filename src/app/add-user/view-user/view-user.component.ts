@@ -27,7 +27,7 @@ export class ViewUserComponent implements OnInit {
   editUserTaskId : number;
   editUserProjectId : number;
   editUserId : number;
-  onUpdateActive : boolean = false;
+  UpdateActive : boolean = false;
 
   // Form Control to search Users.
   queryField : FormControl = new FormControl();
@@ -109,7 +109,7 @@ export class ViewUserComponent implements OnInit {
     this.editUserProjectId = this.userList[i].projectId;
     this.editUserId = this.userList[i].userId;
     console.log(this.editUserId);
-    this.onUpdateActive = true;
+    this.UpdateActive = true;
     this.editUserIndex = i;
   }
 
@@ -173,7 +173,7 @@ export class ViewUserComponent implements OnInit {
       this.editEmployeeId = null;
       this.editUserFirstName = null;
       this.editUserLastName = null;
-      this.onUpdateActive = false;
+      this.UpdateActive = false;
       this.editUserIndex = null;
     }
     else{

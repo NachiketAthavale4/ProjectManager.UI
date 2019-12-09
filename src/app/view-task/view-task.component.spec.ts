@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import {RouterTestingModule} from '@angular/router/testing';
 import { ViewTaskComponent } from './view-task.component';
 
 describe('ViewTaskComponent', () => {
@@ -8,7 +8,8 @@ describe('ViewTaskComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewTaskComponent ]
+      declarations: [ ViewTaskComponent ],
+      imports: [ RouterTestingModule ]
     })
     .compileComponents();
   }));
