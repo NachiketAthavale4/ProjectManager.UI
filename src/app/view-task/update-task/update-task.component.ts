@@ -168,7 +168,7 @@ export class UpdateTaskComponent implements OnInit {
 
   addUser(i : number){
     this.taskUser = this.searchUserList[i].firstName + " " + this.searchUserList[i].lastName;
-    this.selectedUser = this.searchUserList[i];
+    this.updateUser = this.searchUserList[i];
   }
 
   searchTask(){
@@ -199,6 +199,9 @@ export class UpdateTaskComponent implements OnInit {
           project_ID : this.updateprojectId
 
         };
+
+        console.log();
+
         this.taskService.updateTask(this.updateTask).subscribe((data) => {
           this.showNotification('success','Task Updated Successfully');
           form.onReset();
