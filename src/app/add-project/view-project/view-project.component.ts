@@ -38,7 +38,7 @@ export class ViewProjectComponent implements OnInit {
   updateProjectStartDate : Date;
   updateProjectEndDate : Date;
   updateProjectManager : string;
-  onUpdateActive : boolean = false;
+  UpdateActive : boolean = false;
   updateProjectIndex : number = null;
 
   editProject(i : number){
@@ -48,9 +48,9 @@ export class ViewProjectComponent implements OnInit {
     this.updateProjectStartDate = this.searchList[i].startDate;
     this.updateProjectEndDate = this.searchList[i].endDate;
     this.updateProjectManager = this.searchList[i].managedBy;
-    this.onUpdateActive = true;
+    this.UpdateActive = true;
     this.updateProjectIndex = i;
-    console.log("Edit-Project OnUpdate",this.onUpdateActive);
+    console.log("Edit-Project UpdateActive",this.UpdateActive);
   }
 
   projectList : Project[] = [
@@ -106,13 +106,13 @@ export class ViewProjectComponent implements OnInit {
       this.updateProjectStartDate = null;
       this.updateProjectEndDate = null;
       this.updateProjectManager = null;
-      this.onUpdateActive = false;
+      this.UpdateActive = false;
       this.updateProjectIndex = null;
     }
     else{
       console.log("Reset Fired");
       this.updateProjectIndex = null;
-      this.onUpdateActive = false;
+      this.UpdateActive = false;
     }
   }
 

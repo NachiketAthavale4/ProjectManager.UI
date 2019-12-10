@@ -24,12 +24,12 @@ export class CreateProjectComponent implements OnInit, OnChanges{
     this.projectData.priorty = this.editPriorty;
     this.projectData.managedBy = this.editManagedBy;
 
-    this.updateIndicator = this.onUpdateActive;
-    console.log("ngOnChanges",this.onUpdateActive);
+    this.updateIndicator = this.UpdateActive;
+    console.log("ngOnChanges",this.UpdateActive);
     console.log(this.editEndDate);
   }
 
-  @Input() onUpdateActive : boolean = false;
+  @Input() UpdateActive : boolean = false;
 
   @Input() ediProjectId : number;
   @Input() editProjectName = null;
@@ -166,7 +166,7 @@ export class CreateProjectComponent implements OnInit, OnChanges{
     this.projectData.managedBy = null;
     this.projectData.numOfTasks = null;
 
-    console.log("Create-Project OnUpdate",this.updateIndicator);
+    console.log("Create-Project UpdateActive",this.updateIndicator);
   }
 
   onSubmit(form: NgForm){
