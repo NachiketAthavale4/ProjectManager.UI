@@ -7,6 +7,7 @@ import { Project } from 'src/app/models/project';
 import { NotifierService } from 'angular-notifier';
 import { UserService } from 'src/app/services/user.service';
 import { ProjectService } from 'src/app/services/project.service';
+import { AppProject } from 'src/app/models/app-project';
 
 @Component({
   selector: 'app-create-project',
@@ -17,30 +18,37 @@ import { ProjectService } from 'src/app/services/project.service';
 export class CreateProjectComponent implements OnInit, OnChanges{
 
   ngOnChanges(): void {
-    
+    console.log("Priority: ",this.editPriorty);
+    this.projectData.projectId = this.ediProjectId;
+    console.log("Project Id Create ",this.ediProjectId);
     this.projectData.projectName = this.editProjectName;
-    this.projectData.startDate = this.editStartDate;
-    this.projectData.endDate = this.editEndDate;
-    this.projectData.priorty = this.editPriorty;
-    this.projectData.managedBy = this.editManagedBy;
+    this.projectData.projectStartDate = new Date(this.editStartDate);
+    this.projectData.projectEndDate = new Date(this.editEndDate);
+    this.projectData.priority = this.editPriorty;
+    this.projectData.user = this.editManagedBy;
+    if(this.editManagedBy != null){
+      this.managerName = this.projectData.user.firstName + " " + this.projectData.user.lastName;
+    }
 
     this.updateIndicator = this.UpdateActive;
     console.log("ngOnChanges",this.UpdateActive);
     console.log(this.editEndDate);
   }
 
+  managerName : string;
+
   @Input() UpdateActive : boolean = false;
 
   @Input() ediProjectId : number;
-  @Input() editProjectName = null;
-  @Input() editStartDate = null;
-  @Input() editEndDate = null;
-  @Input() editStatus = null;
-  @Input() editPriorty = 0;
-  @Input() editManagedBy = null;
-  @Input() editNumOfTasks = null;
+  @Input() editProjectName : string = null;
+  @Input() editStartDate : Date = null;
+  @Input() editEndDate : Date = null;
+  @Input() editStatus : number = null;
+  @Input() editPriorty : number = 0;
+  @Input() editManagedBy : User = null;
+  @Input() editNumOfTasks : number = null;
 
-  @Output() notify : EventEmitter<Project> = new EventEmitter<Project>();
+  @Output() notify : EventEmitter<AppProject> = new EventEmitter<AppProject>();
 
   updateIndicator : boolean = false;
 
@@ -55,24 +63,25 @@ export class CreateProjectComponent implements OnInit, OnChanges{
 		this.notifier.notify( type, message );
   }
 
-  projectData : Project = {
-    endDate : null,
-    managedBy : null,
-    numOfTasks : null,
-    priorty : null,
+  projectData : AppProject = {
+    projectEndDate : null,
+    noOfTasks : null,
+    priority : null,
     projectId : null,
     projectName : null,
-    startDate : null,
-    status : null,
-    User : null
+    projectStartDate : null,
+    noOfCompletedTasks : null,
+    user : null
   }
-
+  
   queryField : FormControl = new FormControl();
   constructor(private modalService: BsModalService, notifier: NotifierService,
-    private userService : UserService, private projectService : ProjectService) { }
+    private userService : UserService, private projectService : ProjectService) { 
+      this.notifier = notifier;
+    }
 
   ngOnInit() {
-    this.projectData.priorty = 0;
+    this.projectData.priority = 0;
     this.userService.getUser().subscribe((users) => {
       this.userList = users;
       this.searchList = this.userList;
@@ -118,13 +127,13 @@ export class CreateProjectComponent implements OnInit, OnChanges{
 
   toggleProjectDateEnabled(){
     this.projectDateEnabled = !this.projectDateEnabled;
-    this.projectData.startDate = new Date(Date.now());
-    this.projectData.endDate = new Date();
-    this.projectData.endDate.setDate(this.projectData.startDate.getDate() + 1);
+    this.projectData.projectStartDate = new Date(Date.now());
+    this.projectData.projectEndDate = new Date();
+    this.projectData.projectEndDate.setDate(this.projectData.projectEndDate.getDate() + 1);
   }
 
   dateValidCheck(){
-    if(this.projectDateEnabled && this.projectData.startDate < this.projectData.endDate){
+    if(this.projectDateEnabled && this.projectData.projectStartDate < this.projectData.projectEndDate){
       console.log(true);
       return true;
     }
@@ -150,37 +159,74 @@ export class CreateProjectComponent implements OnInit, OnChanges{
     this.modalRef = this.modalService.show(template);
   }
 
-  updateProject(){
-    console.log("Form Submitted");
-    console.log(this.projectData.projectName);
-    console.log(this.projectData.startDate);
-    console.log(this.projectData.endDate);
-    this.notify.emit(this.projectData);
-    this.updateIndicator = false;
-    this.projectData.projectId = null;
-    this.projectData.projectName = null;
-    this.projectData.startDate = null;
-    this.projectData.endDate = null;
-    this.projectData.status = null;
-    this.projectData.priorty = null;
-    this.projectData.managedBy = null;
-    this.projectData.numOfTasks = null;
-
-    console.log("Create-Project UpdateActive",this.updateIndicator);
-  }
-
   onSubmit(form: NgForm){
     
     if(form.valid){
       this.dateValid = this.dateValidCheck();
 
       if(this.updateIndicator){
-      
+        console.log("Form Submitted");
+        console.log(this.projectData.projectName);
+        console.log(this.projectData.projectStartDate);
+        console.log(this.projectData.projectEndDate);
+
+        this.ediProjectId = this.projectData.projectId;
+        this.editEndDate = this.projectData.projectEndDate;
+        this.editStartDate = this.projectData.projectStartDate;
+        this.editNumOfTasks = this.projectData.noOfTasks;
+        this.editPriorty = this.projectData.priority;
+        this.editProjectName = this.projectData.projectName;
+        this.editManagedBy = this.projectData.user;
+        
+
+        this.projectService.updateAppProject(this.projectData).subscribe(
+          (data) => {
+            this.showNotification('success',"Project Updated Successfully");
+            this.projectData.projectId = this.ediProjectId;
+            this.projectData.projectName = this.editProjectName;
+            this.projectData.projectStartDate = this.editStartDate;
+            this.projectData.projectEndDate = this.editEndDate;
+            this.projectData.user = this.editManagedBy;
+            this.projectData.priority = this.editPriorty;
+            this.projectData.noOfTasks = this.editNumOfTasks;
+            this.notify.emit(this.projectData);
+            form.onReset();
+          },
+          (error) => {
+            console.log(error);
+            this.showNotification('error','Some problem occurred while updating');
+          }
+        );
+
+        
+        this.updateIndicator = false;
+        this.projectData.projectId = null;
+        this.projectData.projectName = null;
+        this.projectData.projectStartDate = null;
+        this.projectData.projectEndDate = null;
+        this.projectData.noOfCompletedTasks = null;
+        this.projectData.priority = null;
+        this.projectData.user = null;
+        this.projectData.noOfTasks = null;
+    
+        console.log("Create-Project UpdateActive",this.updateIndicator);
       }
       else{
-        this.projectData.User = this.selectedUser;
-        this.projectService.addProject(this.projectData).subscribe((data) => {
-          this.showNotification('success','Project Added Successfully');
+        console.log("Form posted");
+        this.projectData.user = this.selectedUser;
+        this.projectService.addAppProject(this.projectData).subscribe((data) => {
+          this.projectData.user.projectId = this.projectData.projectId;
+          console.log("Project Id ",this.projectData.user.projectId);
+          this.userService.updateUser(this.projectData.user).subscribe(
+            (data) => {
+              this.showNotification('success','Project Added Successfully');
+              form.onReset();
+            },
+            (error) => {
+              console.log(error);
+              this.showNotification("error","Error Occurred while Updating User!");
+            }
+          );
         },
         (error) => {
           console.log(error);
@@ -194,8 +240,8 @@ export class CreateProjectComponent implements OnInit, OnChanges{
   addManager(i : number){
     console.log(this.searchList[i].employeeId);
     this.selectedUser = this.searchList[i];
-    this.editManagedBy = this.selectedUser.firstName + " " + this.selectedUser.lastName;
-    this.projectData.managedBy = this.editManagedBy;
+    this.projectData.user = this.selectedUser;
+    this.managerName = this.selectedUser.firstName + " " + this.selectedUser.lastName;
   }
 
   searchUser(){

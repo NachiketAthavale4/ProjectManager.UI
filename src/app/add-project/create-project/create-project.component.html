@@ -55,7 +55,7 @@
                     id="projectStartDateId"
                     name="projectStartDateField"
                     *ngIf="projectDateEnabled && !updateIndicator"
-                    [(ngModel)]="projectData.startDate">
+                    [(ngModel)]="projectData.projectStartDate">
                 <input type="text"
                     placeholder="Enter Start Date"
                     class="form-control"
@@ -64,7 +64,7 @@
                     id="updateProjectStartDateId"
                     name="updateProjectStartDateField"
                     *ngIf="updateIndicator"
-                    [(ngModel)]="projectData.startDate">
+                    [(ngModel)]="projectData.projectStartDate">
         </div>
 
         <div class="col-6 col-sm-6 col-md-3 col-lg-3">
@@ -81,7 +81,7 @@
                     id="projectEndDateId"
                     name="projectEndDateField"
                     *ngIf="projectDateEnabled && !updateIndicator"
-                    [(ngModel)] = "projectData.endDate"
+                    [(ngModel)] = "projectData.projectEndDate"
                     [class.field-error]="form.submitted && projectDateEnabled && !dateValid"
                     >
                 <input type="text"
@@ -92,7 +92,7 @@
                     id="updateProjectEndDateId"
                     name="updateProjectEndDateField"
                     *ngIf="updateIndicator"
-                    [(ngModel)] = "projectData.endDate"
+                    [(ngModel)] = "projectData.projectEndDate"
                     [class.field-error]="form.submitted && projectDateEnabled && !dateValid"
                     >
                 
@@ -124,7 +124,7 @@
         <div class="col-10 col-sm-10 col-md-8 col-lg-7">
             <input type="range" class="custom-range" 
                    id="priorityProjectId" name="priorityProjectField"
-                   [(ngModel)] = "projectData.priorty"
+                   [(ngModel)] = "projectData.priority"
                    min=0 max=30 step="1" value=0>
         </div>
         <div class="col-1 col-sm-1 col-md-1 col-lg-1">
@@ -141,7 +141,7 @@
         <div class="col-12 col-sm-12 col-md-8 col-lg-7">
             <input type="text" class="form-control" 
                    id="addUserId" name="addUserField"
-                   [(ngModel)] = "projectData.managedBy"
+                   [(ngModel)] = "managerName"
                    readonly>
         </div>
         <div class="col-12 col-sm-12 col-md-2 col-lg-2">
@@ -164,18 +164,16 @@
             <button 
                 class="btn btn-primary ml-auto mr-2 col-5 col-sm-5 col-md-4 col-lg-3" 
                 type="submit"
-                *ngIf="updateIndicator"
-                (click)="updateProject()">
+                *ngIf="updateIndicator">
                 Update Project
             </button>
             <button 
                 class="btn btn-danger mr-auto col-5 col-sm-5 col-md-4 col-lg-3" 
-                type="reset"
-                (click)="resetFields()">
+                type="reset">
                 Reset
             </button>
     </div>
-
+    <notifier-container></notifier-container>
 </form>
 
 </div>
