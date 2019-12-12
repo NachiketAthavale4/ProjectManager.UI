@@ -59,10 +59,6 @@ export class UpdateTaskComponent implements OnInit {
         this.userService.getUser().subscribe((users)=>{
           this.userList = users;
           this.searchUserList = this.userList;
-          this.taskUser = 
-            this.userList.filter(x => x.userId == this.updateUser.userId)[0].firstName + " "
-                          + this.userList.filter(x => x.userId == this.updateUser.userId)[0].lastName;
-            this.updateUser = this.userList.filter(x => x.userId == this.updateUser.userId)[0];
         },
         (error)=>{
           console.log(error);
@@ -197,10 +193,7 @@ export class UpdateTaskComponent implements OnInit {
           parent_ID : this.routeParentTaskId,
           parentTaskName : this.parentTaskName,
           project_ID : this.updateprojectId
-
         };
-
-        console.log();
 
         this.taskService.updateTask(this.updateTask).subscribe((data) => {
           this.showNotification('success','Task Updated Successfully');
@@ -209,6 +202,7 @@ export class UpdateTaskComponent implements OnInit {
         },
         (error) => {
           this.showNotification('error','Some Error Occurred');
+          console.log(error);
         })
       }
     }

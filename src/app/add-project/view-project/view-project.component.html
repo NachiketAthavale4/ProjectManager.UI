@@ -51,7 +51,7 @@
 
     <br>
 
-    <ul class="list-group">
+    <ul class="list-group" *ngIf="searchList">
         <li class="list-group-item" *ngFor="let project of searchList;index as i">
             <div class="row">
                 <div class="col-8 col-sm-8 col-md-8 col-lg-8">
@@ -122,5 +122,6 @@
             </div>
         </li>
     </ul>
+    <h5 class="text-center" *ngIf="searchList.length == 0">No Records Found</h5>
     <notifier-container></notifier-container>
 </div>

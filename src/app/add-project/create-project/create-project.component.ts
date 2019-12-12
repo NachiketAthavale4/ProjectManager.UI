@@ -208,6 +208,7 @@ export class CreateProjectComponent implements OnInit, OnChanges{
         this.projectData.priority = null;
         this.projectData.user = null;
         this.projectData.noOfTasks = null;
+        this.projectDateEnabled = false;
     
         console.log("Create-Project UpdateActive",this.updateIndicator);
       }
@@ -234,6 +235,8 @@ export class CreateProjectComponent implements OnInit, OnChanges{
                 user : null
               }
               this.notify.emit(this.projectData);
+
+              this.projectDateEnabled = false;
             },
             (error) => {
               console.log(error);

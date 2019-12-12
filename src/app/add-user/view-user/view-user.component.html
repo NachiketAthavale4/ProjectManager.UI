@@ -44,7 +44,7 @@
         </div>
     </div>
     <br>
-    <ul class="list-group">
+    <ul class="list-group" *ngIf="searchList.length > 0">
         <li class="list-group-item" *ngFor="let user of searchList;index as i">
             <div class="row">
                 <div class="col-8 col-sm-8 col-md-8 col-lg-10">
@@ -102,4 +102,5 @@
             </div>
         </li>
     </ul>
+    <h5 class="text-center" *ngIf="searchList.length == 0">No Records Found</h5>
 </div>

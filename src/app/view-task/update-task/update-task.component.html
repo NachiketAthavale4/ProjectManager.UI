@@ -223,7 +223,7 @@
         <br>
 
 
-        <ul class="list-group listoverflow">
+        <ul class="list-group listoverflow" *ngIf="searchUserList.length > 0">
             <li class="list-group-item list-group-item-action" *ngFor="let user of searchUserList;index as i">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-4 col-lg-4">
@@ -241,6 +241,7 @@
                 </div>
             </li>
         </ul>
+        <h5 class="text-center" *ngIf="searchUserList.length == 0">No Records Found</h5>
       </div>
     </div>
     <div class="modal-footer">
@@ -278,7 +279,7 @@
         <br>
 
 
-        <ul class="list-group listoverflow">
+        <ul class="list-group listoverflow" *ngIf="searchTaskList.length > 0">
             <li class="list-group-item list-group-item-action" *ngFor="let task of searchTaskList;index as i">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-8 col-lg-8">
@@ -293,6 +294,7 @@
                 </div>
             </li>
         </ul>
+        <h5 class="text-center" *ngIf="searchTaskList.length == 0">No Records Found</h5>
       </div>
     </div>
     <div class="modal-footer">
