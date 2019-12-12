@@ -32,10 +32,12 @@
             </button>
         </div>
         <div class="col-6 col-sm-6 col-md-2 col-lg-2">
-            <button type="button" class="btn btn-secondary btn-block btn-sm">
+            <button type="button" class="btn btn-secondary btn-block btn-sm"
+                    (click)="sortByPriority()">
                 Priority
             </button>
-            <button type="button" class="btn btn-secondary btn-block btn-sm">
+            <button type="button" class="btn btn-secondary btn-block btn-sm"
+                    (click)="sortByStatus()">
                 Completed
             </button>
         </div>
@@ -72,14 +74,23 @@
                 <div class=" col-12 col-sm-12 col-md-1 col-lg-1 align-self-center">
                     <button class="btn btn-success" type="button"
                             [routerLink]="['/dashboard','view-task','update-task']"
-                            [queryParams] = "{ projectId: projectId , taskId: task.taskId}">
+                            [queryParams] = "{ projectId: projectId , taskId: task.taskId}"
+                            *ngIf="task.status != 1">
+                        Edit
+                    </button>
+                    <button class="btn btn-success" type="button"
+                            *ngIf="task.status == 1" disabled>
                         Edit
                     </button>
                 </div>
                 <div class=" col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
                     <button class="btn btn-danger" type="button" 
-                            *ngIf="task.status != 'Completed'"
+                            *ngIf="task.status != 1"
                             (click)="endTask(i)">
+                        End Task
+                    </button>
+                    <button class="btn btn-danger" type="button" 
+                            *ngIf="task.status == 1" disabled>
                         End Task
                     </button>
                 </div>

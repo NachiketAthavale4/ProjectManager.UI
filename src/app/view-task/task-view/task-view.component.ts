@@ -76,6 +76,11 @@ export class TaskViewComponent implements OnInit {
 
   totalTaskList: Task[];
 
+  isStartDateAsc: boolean;
+  isEndDateAsc: boolean;
+  isPriorityAsc: boolean;
+  isCompletedAsc: boolean;
+
   projectList : Project[];
 
   modalRef: BsModalRef;
@@ -128,21 +133,31 @@ export class TaskViewComponent implements OnInit {
   }
 
   sortByStartDate(){
-    this.taskList = this.taskList.sort((a,b) => 
-      <any>new Date(a.start_Date) - <any>new Date(b.start_Date));
+    this.isStartDateAsc = !this.isStartDateAsc;
+    const direction = this.isStartDateAsc ? 1 : -1;
+    this.taskList.sort((a, b) => (a.start_Date > b.start_Date) ? 1 * direction
+      : ((b.start_Date > a.start_Date) ? -1 * direction : 0));
   }
 
   sortByEndDate(){
-    this.taskList = this.taskList.sort((a,b) => 
-      <any>new Date(a.end_Date) - <any>new Date(b.end_Date));
+    this.isEndDateAsc = !this.isEndDateAsc;
+    const direction = this.isEndDateAsc ? 1 : -1;
+    this.taskList.sort((a, b) => (a.end_Date > b.end_Date) ? 1 * direction :
+      ((b.end_Date > a.end_Date) ? -1 * direction : 0));
   }
 
   sortByPriority(){
-    this.taskList = this.taskList.sort((x,y) => x.priority - y.priority);
+    this.isPriorityAsc = !this.isPriorityAsc;
+    const direction = this.isPriorityAsc ? 1 : -1;
+    this.taskList.sort((a, b) => (a.priority > b.priority) ? 1 * direction :
+      ((b.priority > a.priority) ? -1 * direction : 0));
   }
 
   sortByStatus(){
-    this.taskList = this.taskList.sort((x,y) => x.status - y.status);
+    this.isCompletedAsc = !this.isCompletedAsc;
+    const direction = this.isCompletedAsc ? 1 : -1;
+    this.taskList.sort((a, b) => (a.status> b.status) ? 1 * direction :
+      ((b.status > a.status) ? -1 * direction : 0));
   }
 
 }

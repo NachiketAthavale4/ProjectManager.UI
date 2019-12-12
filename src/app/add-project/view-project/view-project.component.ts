@@ -72,6 +72,11 @@ export class ViewProjectComponent implements OnInit {
   UpdateActive : boolean = false;
   updateProjectIndex : number = null;
 
+  isStartDateAsc: boolean;
+  isEndDateAsc: boolean;
+  isCompletedAsc: boolean;
+  isPriorityAsc: boolean;
+
   public showNotification( type: string, message: string ): void {
 		this.notifier.notify( type, message );
   }
@@ -108,6 +113,34 @@ export class ViewProjectComponent implements OnInit {
   }
 
   updateActiveIndicator : boolean = false;
+
+  sortPriority(){
+    this.isPriorityAsc = !this.isPriorityAsc;
+      const direction = this.isPriorityAsc ? 1 : -1;
+      this.searchList.sort((a, b) => (a.priority > b.priority) ? 1 * direction :
+        ((b.priority > a.priority) ? -1 * direction : 0));
+  }
+
+  sortStartDate(){
+    this.isStartDateAsc = !this.isStartDateAsc;
+      const direction = this.isStartDateAsc ? 1 : -1;
+      this.searchList.sort((a, b) => (a.projectStartDate > b.projectStartDate) ? 1 * direction
+        : ((b.projectStartDate > a.projectStartDate) ? -1 * direction : 0));
+  }
+
+  sortEndDate(){
+    this.isEndDateAsc = !this.isEndDateAsc;
+    const direction = this.isEndDateAsc ? 1 : -1;
+    this.searchList.sort((a, b) => (a.projectEndDate > b.projectEndDate) ? 1 * direction :
+      ((b.projectEndDate > a.projectEndDate) ? -1 * direction : 0));
+  }
+
+  sortCompleted(){
+    this.isCompletedAsc = !this.isCompletedAsc;
+    const direction = this.isCompletedAsc ? 1 : -1;
+    this.searchList.sort((a, b) => (a.noOfCompletedTasks > b.noOfCompletedTasks) ? 1 * direction :
+      ((b.noOfCompletedTasks > a.noOfCompletedTasks) ? -1 * direction : 0));
+  }
 
   onNotify(project : Project) : void {
     if(project != null && project.projectName != null){

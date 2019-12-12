@@ -183,24 +183,24 @@ export class ViewUserComponent implements OnInit {
 
   // Sort Methods to sort users.
   sortByFirstName(){
-    this.searchList = this.searchList.sort((x,y) => x.firstName.localeCompare(y.firstName));
-    this.sortOrderEmployeeId = false;
-    this.sortOrderFirstName = true;
-    this.sortOrderLastName = false;
+    this.sortOrderFirstName = !this.sortOrderFirstName;
+    const direction = this.sortOrderFirstName ? 1 : -1;
+    this.searchList.sort((a, b) => (a.firstName > b.firstName) ? 1 * direction
+      : ((b.firstName > a.firstName) ? -1 * direction : 0));
   }
 
   sortByLastName(){
-    this.searchList = this.searchList.sort((x,y) => x.lastName.localeCompare(y.lastName));
-    this.sortOrderEmployeeId = false;
-    this.sortOrderFirstName = false;
-    this.sortOrderLastName = true;
+    this.sortOrderLastName = !this.sortOrderLastName;
+    const direction = this.sortOrderLastName ? 1 : -1;
+    this.searchList.sort((a, b) => (a.lastName > b.lastName) ? 1 * direction :
+      ((b.lastName > a.lastName) ? -1 * direction : 0));
   }
 
   sortByEmployeeId(){
-    this.searchList = this.searchList.sort((x,y) => x.employeeId - y.employeeId);
-    this.sortOrderEmployeeId = true;
-    this.sortOrderFirstName = false;
-    this.sortOrderLastName = false;
+    this.sortOrderEmployeeId = !this.sortOrderEmployeeId;
+    const direction = this.sortOrderEmployeeId ? 1 : -1;
+    this.searchList.sort((a, b) => (a.employeeId > b.employeeId) ? 1 * direction :
+      ((b.employeeId > a.employeeId) ? -1 * direction : 0));
   }
 
 }

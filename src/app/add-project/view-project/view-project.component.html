@@ -28,18 +28,22 @@
             <b>Sort:</b>
         </div>
         <div class="col-6 col-sm-6 col-md-2 col-lg-2">
-            <button type="button" class="btn btn-secondary btn-block btn-sm">
+            <button type="button" class="btn btn-secondary btn-block btn-sm"
+                    (click)="sortStartDate()">
                 Start Date
             </button>
-            <button type="button" class="btn btn-secondary btn-block btn-sm">
+            <button type="button" class="btn btn-secondary btn-block btn-sm"
+                    (click)="sortEndDate()">
                 End Date
             </button>
         </div>
         <div class="col-6 col-sm-6 col-md-2 col-lg-2">
-            <button type="button" class="btn btn-secondary btn-block btn-sm">
+            <button type="button" class="btn btn-secondary btn-block btn-sm"
+                    (click)="sortPriority()">
                 Priority
             </button>
-            <button type="button" class="btn btn-secondary btn-block btn-sm">
+            <button type="button" class="btn btn-secondary btn-block btn-sm"
+                    (click)="sortCompleted()">
                 Completed
             </button>
         </div>
