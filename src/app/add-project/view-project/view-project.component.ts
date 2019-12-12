@@ -102,7 +102,27 @@ export class ViewProjectComponent implements OnInit {
   projectList : AppProject[];
 
   suspend(i : number){
-    
+    this.projectService.deleteAppProject(this.searchList[i]).subscribe(
+      (data) => {
+        this.showNotification('success','Project Deleted Successfully!');
+        this.projectService.getAppProject().subscribe(
+          (projects) => {
+            this.projectList = projects
+            this.searchList = this.projectList;
+            if(this.searchText != null){
+              this.searchList = this.searchList.filter(x => x.projectName.toUpperCase().includes(this.searchText.toUpperCase()));
+            }
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      },
+      (error) => {
+        console.log(error);
+        this.showNotification('error','Some problem occurred');
+      }
+    );
   }
 
   searchUser(){
@@ -165,6 +185,20 @@ export class ViewProjectComponent implements OnInit {
           }
         );
       }
+
+      this.projectService.getAppProject().subscribe(
+        (projects) => {
+          this.projectList = projects
+          this.searchList = this.projectList;
+          if(this.searchText != null){
+            this.searchList = this.searchList.filter(x => x.projectName.toUpperCase().includes(this.searchText.toUpperCase()));
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+
       this.updateProjectId = null;
       this.updateProjectName = null;
       this.updateProjectPriority = null;

@@ -79,4 +79,13 @@ deleteProject(project:Project): Observable<any> {
         .pipe(catchError(this.handleError));
 }
 
+    deleteAppProject(project : AppProject): Observable<any> {
+        return this.http.post(super.baseurl() + 'api/project/delete',project)
+            .pipe(map((res : Response) => {
+                const data = res["data"];
+                return data;
+            }))
+            .pipe(catchError(this.handleError));
+    }
+
 }

@@ -182,6 +182,7 @@ export class CreateProjectComponent implements OnInit, OnChanges{
         this.projectService.updateAppProject(this.projectData).subscribe(
           (data) => {
             this.showNotification('success',"Project Updated Successfully");
+            form.onReset();
             this.projectData.projectId = this.ediProjectId;
             this.projectData.projectName = this.editProjectName;
             this.projectData.projectStartDate = this.editStartDate;
@@ -190,7 +191,6 @@ export class CreateProjectComponent implements OnInit, OnChanges{
             this.projectData.priority = this.editPriorty;
             this.projectData.noOfTasks = this.editNumOfTasks;
             this.notify.emit(this.projectData);
-            form.onReset();
           },
           (error) => {
             console.log(error);
@@ -214,6 +214,8 @@ export class CreateProjectComponent implements OnInit, OnChanges{
       else{
         console.log("Form posted");
         this.projectData.user = this.selectedUser;
+        let projectName = this.projectData.projectName;
+        let projectId = this.projectData.projectId;
         this.projectService.addAppProject(this.projectData).subscribe((data) => {
           this.projectData.user.projectId = this.projectData.projectId;
           console.log("Project Id ",this.projectData.user.projectId);
@@ -221,6 +223,17 @@ export class CreateProjectComponent implements OnInit, OnChanges{
             (data) => {
               this.showNotification('success','Project Added Successfully');
               form.onReset();
+              this.projectData = {
+                projectId : projectId,
+                projectName : projectName,
+                noOfCompletedTasks : null,
+                noOfTasks : null,
+                priority : null,
+                projectEndDate : null,
+                projectStartDate : null,
+                user : null
+              }
+              this.notify.emit(this.projectData);
             },
             (error) => {
               console.log(error);
