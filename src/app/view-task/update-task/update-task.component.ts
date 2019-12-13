@@ -39,7 +39,6 @@ export class UpdateTaskComponent implements OnInit {
 
     this.taskService.getAllTasksByProjectId(this.updateprojectId).subscribe((tasks) => {
       this.baseTaskList = tasks;
-      console.log("Length",this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].parent_ID);
       this.routeParentTaskId =
         this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].parent_ID;
         this.taskStartDate = 
@@ -53,6 +52,10 @@ export class UpdateTaskComponent implements OnInit {
         this.taskName = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].task_Name;
 
         this.updateUser = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].user;
+        
+        if(this.updateUser != null){
+          this.taskUser = this.updateUser.firstName + " " + this.updateUser.lastName;
+        }
 
         this.updateTaskStatus = this.baseTaskList.filter(x => x.taskId == this.updateTaskId)[0].status;
 

@@ -122,6 +122,6 @@
             </div>
         </li>
     </ul>
-    <h5 class="text-center" *ngIf="searchList.length == 0">No Records Found</h5>
+    <h5 class="text-center" *ngIf="searchList == null || searchList.length == 0">No Records Found</h5>
     <notifier-container></notifier-container>
 </div>
