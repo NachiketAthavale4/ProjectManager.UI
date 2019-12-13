@@ -82,10 +82,13 @@ export class ViewUserComponent implements OnInit {
     this.userService.getUser().subscribe((users) => {
       this.userList = users;
       this.searchList = this.userList;
+
       if(this.searchText != null){
         this.searchList = 
           this.userList.filter(x => x.firstName.toUpperCase().includes(this.searchText.toUpperCase())
-                                || x.lastName.toUpperCase().includes(this.searchText.toUpperCase()));
+                                || x.lastName.toUpperCase().includes(this.searchText.toUpperCase())
+                                || (x.firstName.toUpperCase() + " " + x.lastName.toUpperCase())
+                                .includes(this.searchText.toUpperCase()));
         }
     },
       (error) => {

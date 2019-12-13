@@ -17,51 +17,17 @@ import { AppProject } from 'src/app/models/app-project';
 })
 export class CreateProjectComponent implements OnInit, OnChanges{
 
-  ngOnChanges(): void {
-    console.log("Priority: ",this.editPriorty);
-    this.projectData.projectId = this.ediProjectId;
-    console.log("Project Id Create ",this.ediProjectId);
-    this.projectData.projectName = this.editProjectName;
-    this.projectData.projectStartDate = new Date(this.editStartDate);
-    this.projectData.projectEndDate = new Date(this.editEndDate);
-    this.projectData.priority = this.editPriorty;
-    this.projectData.user = this.editManagedBy;
-    if(this.editManagedBy != null){
-      this.managerName = this.projectData.user.firstName + " " + this.projectData.user.lastName;
-    }
-
-    this.updateIndicator = this.UpdateActive;
-    console.log("ngOnChanges",this.UpdateActive);
-    console.log(this.editEndDate);
-  }
-
-  managerName : string;
-
-  @Input() UpdateActive : boolean = false;
-
-  @Input() ediProjectId : number;
-  @Input() editProjectName : string = null;
-  @Input() editStartDate : Date = null;
-  @Input() editEndDate : Date = null;
-  @Input() editStatus : number = null;
-  @Input() editPriorty : number = 0;
-  @Input() editManagedBy : User = null;
-  @Input() editNumOfTasks : number = null;
-
-  @Output() notify : EventEmitter<AppProject> = new EventEmitter<AppProject>();
-
-  updateIndicator : boolean = false;
-
+  queryField : FormControl = new FormControl();
   private notifier: NotifierService;
-
-  resetFields(){
-    this.updateIndicator = false;
-    this.notify.emit(this.projectData);
-  }
-
-  public showNotification( type: string, message: string ): void {
-		this.notifier.notify( type, message );
-  }
+  updateIndicator : boolean = false;
+  managerName : string;
+  projectDateEnabled : boolean = false;
+  dateValid : boolean = false;
+  searchText : string;
+  searchList : User[];
+  selectedUser : User;
+  userList : User[];
+  modalRef: BsModalRef;
 
   projectData : AppProject = {
     projectEndDate : null,
@@ -73,12 +39,23 @@ export class CreateProjectComponent implements OnInit, OnChanges{
     noOfCompletedTasks : null,
     user : null
   }
-  
-  queryField : FormControl = new FormControl();
+
+  @Input() UpdateActive : boolean = false;
+  @Input() ediProjectId : number;
+  @Input() editProjectName : string = null;
+  @Input() editStartDate : Date = null;
+  @Input() editEndDate : Date = null;
+  @Input() editStatus : number = null;
+  @Input() editPriorty : number = 0;
+  @Input() editManagedBy : User = null;
+  @Input() editNumOfTasks : number = null;
+
+  @Output() notify : EventEmitter<AppProject> = new EventEmitter<AppProject>();
+
   constructor(private modalService: BsModalService, notifier: NotifierService,
     private userService : UserService, private projectService : ProjectService) { 
       this.notifier = notifier;
-    }
+  }
 
   ngOnInit() {
     this.projectData.priority = 0;
@@ -94,7 +71,6 @@ export class CreateProjectComponent implements OnInit, OnChanges{
     this.queryField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
-          console.log("Result: ",result);
           if(result=="" || result==" "){
             this.userService.getUser().subscribe((users) => {
               this.userList = users;
@@ -113,17 +89,27 @@ export class CreateProjectComponent implements OnInit, OnChanges{
     );
   }
 
-  projectDateEnabled : boolean = false;
+  ngOnChanges(): void {
+    this.projectData.projectId = this.ediProjectId;
+    this.projectData.projectName = this.editProjectName;
+    this.projectData.projectStartDate = new Date(this.editStartDate);
+    this.projectData.projectEndDate = new Date(this.editEndDate);
+    this.projectData.priority = this.editPriorty;
+    this.projectData.user = this.editManagedBy;
+    if(this.editManagedBy != null){
+      this.managerName = this.projectData.user.firstName + " " + this.projectData.user.lastName;
+    }
+    this.updateIndicator = this.UpdateActive;
+  }
 
-  dateValid : boolean = false;
+  resetFields(){
+    this.updateIndicator = false;
+    this.notify.emit(this.projectData);
+  }
 
-  searchText : string;
-
-  searchList : User[];
-
-  selectedUser : User;
-
-  userList : User[];
+  public showNotification( type: string, message: string ): void {
+		this.notifier.notify( type, message );
+  }
 
   toggleProjectDateEnabled(){
     this.projectDateEnabled = !this.projectDateEnabled;
@@ -142,8 +128,6 @@ export class CreateProjectComponent implements OnInit, OnChanges{
       return false;
     }
   }
-
-  modalRef: BsModalRef;
  
   openModal(template: TemplateRef<any>) {
     this.searchText = null;
@@ -165,11 +149,6 @@ export class CreateProjectComponent implements OnInit, OnChanges{
       this.dateValid = this.dateValidCheck();
 
       if(this.updateIndicator){
-        console.log("Form Submitted");
-        console.log(this.projectData.projectName);
-        console.log(this.projectData.projectStartDate);
-        console.log(this.projectData.projectEndDate);
-
         this.ediProjectId = this.projectData.projectId;
         this.editEndDate = this.projectData.projectEndDate;
         this.editStartDate = this.projectData.projectStartDate;
@@ -197,7 +176,6 @@ export class CreateProjectComponent implements OnInit, OnChanges{
             this.showNotification('error','Some problem occurred while updating');
           }
         );
-
         
         this.updateIndicator = false;
         this.projectData.projectId = null;
@@ -209,17 +187,13 @@ export class CreateProjectComponent implements OnInit, OnChanges{
         this.projectData.user = null;
         this.projectData.noOfTasks = null;
         this.projectDateEnabled = false;
-    
-        console.log("Create-Project UpdateActive",this.updateIndicator);
       }
       else{
-        console.log("Form posted");
         this.projectData.user = this.selectedUser;
         let projectName = this.projectData.projectName;
         let projectId = this.projectData.projectId;
         this.projectService.addAppProject(this.projectData).subscribe((data) => {
           this.projectData.user.projectId = this.projectData.projectId;
-          console.log("Project Id ",this.projectData.user.projectId);
           this.userService.updateUser(this.projectData.user).subscribe(
             (data) => {
               this.showNotification('success','Project Added Successfully');
@@ -250,11 +224,9 @@ export class CreateProjectComponent implements OnInit, OnChanges{
         });
       }
     }
-
   }
 
   addManager(i : number){
-    console.log(this.searchList[i].employeeId);
     this.selectedUser = this.searchList[i];
     this.projectData.user = this.selectedUser;
     this.managerName = this.selectedUser.firstName + " " + this.selectedUser.lastName;
