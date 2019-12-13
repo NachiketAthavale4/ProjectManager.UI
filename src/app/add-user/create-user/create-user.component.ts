@@ -62,7 +62,6 @@ export class CreateUserComponent implements OnInit, OnChanges {
     this.user.taskId = this.editTaskId;
     this.user.userId = this.editUserId;
     this.updateIndicator = this.UpdateActive;
-    console.log('Update Indicator',this.updateIndicator)
 
     if(this.user.employeeId != null){
       this.user.employeeId = +this.user.employeeId.toString().trim();
@@ -88,7 +87,6 @@ export class CreateUserComponent implements OnInit, OnChanges {
   addUser(form : NgForm){
     if(form.valid){
       this.updatedUser = this.user;
-      console.log("Before Update: ",this.user.employeeId);
       if(this.updateIndicator){
           this.userService.updateUser(this.updatedUser).subscribe((data) => {
             this.showNotification('success','User Updated Successfully');
@@ -100,7 +98,7 @@ export class CreateUserComponent implements OnInit, OnChanges {
               projectId : this.editProjectId,
               taskId  : this.editTaskId
             };
-            console.log("Emit: ",this.user.employeeId);
+
             this.notify.emit(this.user);
           },
           (error) => {

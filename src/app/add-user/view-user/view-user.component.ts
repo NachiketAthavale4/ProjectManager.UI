@@ -41,6 +41,7 @@ export class ViewUserComponent implements OnInit {
   // List which will contain all the Users from database.
   userList : User[];
 
+  // Sort fields
   sortOrderEmployeeId : boolean = false;
   sortOrderFirstName : boolean = false;
   sortOrderLastName : boolean = false;
@@ -48,7 +49,6 @@ export class ViewUserComponent implements OnInit {
   // Initialization Lifecycle hook.
   ngOnInit() {
     this.userService.getUser().subscribe((users) => {
-      console.log('Success');
       this.userList = users;
       this.searchList = this.userList;
     },
@@ -59,7 +59,6 @@ export class ViewUserComponent implements OnInit {
     this.queryField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
-          console.log("Result: ",result);
           if(result=="" || result==" "){
             this.userService.getUser().subscribe((users) => {
               this.userList = users;
@@ -94,7 +93,6 @@ export class ViewUserComponent implements OnInit {
       (error) => {
         console.log(error)
       });
-    console.log(this.searchText);
     
   }
 
@@ -104,21 +102,18 @@ export class ViewUserComponent implements OnInit {
 
   // Updates a user's details
   editUser(i : number){
-    console.log(this.userList[i].employeeId);
     this.editEmployeeId = this.userList[i].employeeId;
     this.editUserFirstName = this.userList[i].firstName;
     this.editUserLastName = this.userList[i].lastName;
     this.editUserTaskId = this.userList[i].taskId;
     this.editUserProjectId = this.userList[i].projectId;
     this.editUserId = this.userList[i].userId;
-    console.log(this.editUserId);
     this.UpdateActive = true;
     this.editUserIndex = i;
   }
 
   // Delete a user from Project Manager system.
   deleteUser(i : number){
-    console.log(this.userList[i].employeeId);
     this.userService.deleteUser(this.searchList[i]).subscribe((data) => {
       this.userService.getUser().subscribe((users) => {
         this.userList = users;
@@ -146,11 +141,7 @@ export class ViewUserComponent implements OnInit {
 
   // Method ran from Nested Component Create User, when that user is updated.
   onNotify(user : User) : void {
-    console.log("Notify First Ran");
-    console.log(user);
     if(user != null && user.employeeId != null){
-      console.log("Notify Ran");
-      
       this.userService.getUser().subscribe((users) => {
         this.userList = users;
         this.searchList = this.userList;

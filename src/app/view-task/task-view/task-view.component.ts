@@ -18,10 +18,29 @@ export class TaskViewComponent implements OnInit {
 
   private notifier: NotifierService;
 
+  projectName : string = null;
+  projectId : number = null;
+
+  taskList : Task[] = [];
+
+  totalTaskList: Task[];
+
+  isStartDateAsc: boolean;
+  isEndDateAsc: boolean;
+  isPriorityAsc: boolean;
+  isCompletedAsc: boolean;
+
+  projectList : Project[];
+
+  searchList : Project[];
+  searchText : string;
+
+  modalRef: BsModalRef;
+
   constructor(private modalService: BsModalService,private projectService: ProjectService,
     notifier: NotifierService,private taskService: TaskService) {
       this.notifier = notifier;
-     }
+  }
 
   ngOnInit() {
     this.projectService.getProject().subscribe((project) => {
@@ -36,7 +55,6 @@ export class TaskViewComponent implements OnInit {
     this.queryField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
-          console.log("Result: ",result);
           if(result=="" || result==" "){
             this.projectService.getProject().subscribe((project) => {
               this.projectList = project;
@@ -55,9 +73,6 @@ export class TaskViewComponent implements OnInit {
     );
   }
 
-  searchList : Project[];
-  searchText : string;
-
   searchProject(){
     if(this.searchText != null){
       this.searchList = 
@@ -69,21 +84,7 @@ export class TaskViewComponent implements OnInit {
 		this.notifier.notify( type, message );
   }
 
-  projectName : string = null;
-  projectId : number = null;
-
-  taskList : Task[] = [];
-
-  totalTaskList: Task[];
-
-  isStartDateAsc: boolean;
-  isEndDateAsc: boolean;
-  isPriorityAsc: boolean;
-  isCompletedAsc: boolean;
-
-  projectList : Project[];
-
-  modalRef: BsModalRef;
+  
  
   openModal(template: TemplateRef<any>) {
     this.searchText = null;
@@ -114,7 +115,6 @@ export class TaskViewComponent implements OnInit {
   }
 
   endTask(i : number){
-    console.log(i);
     this.taskList[i].status = 1;
     this.taskService.updateTask(this.taskList[i]).subscribe((data)=> {
       this.showNotification('success','Task Completed Successfully');

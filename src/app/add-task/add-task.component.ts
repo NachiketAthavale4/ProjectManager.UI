@@ -18,11 +18,54 @@ import { Task } from '../models/task';
 })
 export class AddTaskComponent implements OnInit {
 
+  taskName : string;
+  taskStartDate : Date;
+  taskEndDate : Date;
+  isTaskParent: boolean = false;
+  searchProjectText : string;
+  searchProjectList : Project[];
+
+  projectList : Project[];
+
+  searchTaskText : string;
+  searchTaskList : ParentTask[];
+  taskList : ParentTask[];
+
   queryField : FormControl = new FormControl();
   queryProjectField : FormControl = new FormControl();
   queryTaskField : FormControl = new FormControl();
 
   private notifier: NotifierService;
+
+  modalRef: BsModalRef;
+
+  parentTaskName : string;
+  selectedTask : ParentTask;
+  selectedTaskIndex : number;
+  searchUserText : string;
+  searchUserList : User[];
+  taskUser : string;
+  selectedUser : User;
+  projectName : string;
+  selectedProject : Project;
+  selectedProjectIndex : number;
+
+  addTask : Task = {
+    parent_ID : null,
+    end_Date : null,
+    parentTaskName : null,
+    priority : null,
+    project_ID : null,
+    start_Date : null,
+    status : null,
+    taskId : null,
+    task_Name : null,
+    user : null
+  };
+
+  endDateValid : boolean;
+  taskPriority : number;
+  userList : User[];
 
   constructor(private modalService: BsModalService,private userService: UserService, 
     notifier: NotifierService, private projectService: ProjectService,
@@ -67,7 +110,6 @@ export class AddTaskComponent implements OnInit {
     this.queryField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
-          console.log("Result: ",result);
           if(result=="" || result==" "){
             this.userService.getUser().subscribe((users) => {
               this.userList = users;
@@ -89,7 +131,6 @@ export class AddTaskComponent implements OnInit {
     this.queryProjectField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
-          console.log("Result: ",result);
           if(result=="" || result==" "){
             this.projectService.getProject().subscribe((project) => {
               this.projectList = project;
@@ -109,7 +150,6 @@ export class AddTaskComponent implements OnInit {
     this.queryTaskField.valueChanges.subscribe(
       (result : string) => {
         if(result != null){
-          console.log("Result: ",result);
           if(result=="" || result==" "){
             this.taskService.getParentTask().subscribe((tasks) => {
               this.taskList = tasks;
@@ -156,23 +196,18 @@ export class AddTaskComponent implements OnInit {
     }
   }
 
-  taskPriority : number;
+  
 
   onSubmit(form : NgForm){
-    console.log("Form Submitted");
     if(form.valid && ((this.isTaskParent && this.taskUser == null) || 
         (!this.isTaskParent && this.taskUser != null))){
       if(this.taskEndDate < this.taskStartDate){
         this.endDateValid = false;
-        console.log(this.endDateValid);
       }
       else {
         this.endDateValid = true;
-        console.log(this.endDateValid);
         this.addTask.end_Date = this.taskEndDate;
         this.addTask.start_Date = this.taskStartDate;
-        console.log(this.addTask.start_Date);
-        console.log(this.addTask.end_Date);
         this.addTask.task_Name = this.taskName;
         if(this.selectedProject != null){
           this.addTask.project_ID = this.selectedProject.projectId;
@@ -185,7 +220,6 @@ export class AddTaskComponent implements OnInit {
         this.addTask.user = this.selectedUser;
         this.taskService.addTask(this.addTask).subscribe((data) => {
           this.showNotification('success','Task inserted successfully');
-          console.log("SUccess");
           this.resetFields();
           form.onReset();
         },
@@ -205,36 +239,6 @@ export class AddTaskComponent implements OnInit {
     this.parentTaskName = null;
     this.selectedTask = null;
   }
-
-  modalRef: BsModalRef;
-
-  parentTaskName : string;
-  selectedTask : ParentTask;
-  selectedTaskIndex : number;
-  searchUserText : string;
-  searchUserList : User[];
-  taskUser : string;
-  selectedUser : User;
-  projectName : string;
-  selectedProject : Project;
-  selectedProjectIndex : number;
-
-  addTask : Task = {
-    parent_ID : null,
-    end_Date : null,
-    parentTaskName : null,
-    priority : null,
-    project_ID : null,
-    start_Date : null,
-    status : null,
-    taskId : null,
-    task_Name : null,
-    user : null
-  };
-
-  endDateValid : boolean;
-
-  userList : User[];
 
   openModal(template: TemplateRef<any>) {
     this.searchUserText = null;
@@ -294,36 +298,9 @@ export class AddTaskComponent implements OnInit {
   }
 
   selectTask(i : number){
-    console.log(i);
     this.parentTaskName = this.searchTaskList[i].parentTaskName;
     this.selectedTask = this.searchTaskList[i];
     this.selectedTaskIndex = this.searchTaskList[i].parentTaskId;
   }
-
-  taskName : string;
-  taskStartDate : Date;
-  taskEndDate : Date;
-  isTaskParent: boolean = false;
-  searchProjectText : string;
-  searchProjectList : Project[];
-
-  projectList : Project[];
-
-  searchTaskText : string;
-  searchTaskList : ParentTask[];
-  taskList : ParentTask[] = [
-    {
-      parentTaskId : 1,
-      parentTaskName : "Execute Order 66"
-    },
-    {
-      parentTaskId : 2,
-      parentTaskName : "Execute Order 67"
-    },
-    {
-      parentTaskId : 2,
-      parentTaskName : "Execute Order 68"
-    }
-  ];
 
 }
